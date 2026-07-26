@@ -9,7 +9,7 @@ hashing. Quantova is on testnet, ahead of a mainnet launch.
 
 | Tool | What it is | Use it to |
 |---|---|---|
-| **QCore.js** | Official JavaScript and TypeScript client, npm `@qunatovainc/qcore` | Connect, read state, build and ML-DSA-65 sign transactions, call QVM containers, resolve names, from web apps and Node |
+| **QCore.js** | Official JavaScript and TypeScript client, npm `@quantovainc/qcore` | Connect, read state, build and ML-DSA-65 sign transactions, call QVM containers, resolve names, from web apps and Node |
 | **QCore.py** | Official Python client | The same, from Python, for backends, scripts, and data tooling |
 | **QCore.rs** | The Rust core the clients bind to | Build native services and custom bindings on the same core |
 | **QMask** | Native post quantum wallet browser extension | Create accounts, sign transactions, and inject a post quantum signer for apps |

@@ -10,7 +10,7 @@ core QCore.rs.
 
 ```bash
 # JavaScript and TypeScript
-npm install @qunatovainc/qcore
+npm install @quantovainc/qcore
 
 # Python
 pip install qcore
@@ -43,7 +43,7 @@ print("head", q.head()["height"])
 
 ```js
 // QCore.js
-const { QCore } = require('@qunatovainc/qcore');
+const { QCore } = require('@quantovainc/qcore');
 const q = new QCore('https://testnet.quantova.io');
 console.log('head', (await q.head()).height);
 ```

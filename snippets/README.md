@@ -12,7 +12,7 @@ print(q.head()["height"])
 ```
 
 ```js
-const { QCore } = require('@qunatovainc/qcore');
+const { QCore } = require('@quantovainc/qcore');
 const q = new QCore('https://testnet.quantova.io');
 console.log((await q.head()).height);
 ```

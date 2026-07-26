@@ -36,8 +36,8 @@ print("account", q.get_account("Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C")["bala
 ```
 
 ```js
-// QCore.js  (npm install @qunatovainc/qcore)
-const { QCore } = require('@qunatovainc/qcore');
+// QCore.js  (npm install @quantovainc/qcore)
+const { QCore } = require('@quantovainc/qcore');
 
 const q = new QCore('https://testnet.quantova.io');
 console.log('head   ', (await q.head()).height);
@@ -75,7 +75,7 @@ A short index. The full catalog with descriptions is in
 [docs/tools-catalog.md](docs/tools-catalog.md).
 
 **Build**
-* **QCore.js**, the official JavaScript and TypeScript client, published on npm as `@qunatovainc/qcore`.
+* **QCore.js**, the official JavaScript and TypeScript client, published on npm as `@quantovainc/qcore`.
 * **QCore.py**, the official Python client.
 * **QCore.rs**, the Rust core the other clients bind to.
 * **QMask**, the native post quantum wallet browser extension.
@@ -120,7 +120,7 @@ python connect.py
 
 # JavaScript
 cd examples/javascript
-npm install @qunatovainc/qcore
+npm install @quantovainc/qcore
 export QUANTOVA_GATEWAY=https://testnet.quantova.io
 node connect.js
 ```

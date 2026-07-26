@@ -11,7 +11,7 @@
  * These examples talk to the Quantova gateway the same way QCore.js does. Every
  * call is an HTTP POST to /v1/<method> with a flat JSON body. In a full app you
  * use the QCore facade directly (see the README). Here a tiny gateway helper is
- * included so the examples run without installing @qunatovainc/qcore, while the
+ * included so the examples run without installing @quantovainc/qcore, while the
  * QCore.js API shape is shown in comments.
  */
 'use strict';

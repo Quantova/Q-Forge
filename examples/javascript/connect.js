@@ -10,7 +10,7 @@
  *   node connect.js
  *
  * In a full app with QCore.js installed
- *   const { QCore } = require('@qunatovainc/qcore');
+ *   const { QCore } = require('@quantovainc/qcore');
  *   const q = new QCore(process.env.QUANTOVA_GATEWAY);
  *   const head = await q.head();
  *   const account = await q.getAccount(ADDRESS);

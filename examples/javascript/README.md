@@ -3,7 +3,7 @@
 Runnable samples using the official JavaScript client. Point them at any gateway.
 
 ```bash
-npm install @qunatovainc/qcore
+npm install @quantovainc/qcore
 export QUANTOVA_GATEWAY=http://127.0.0.1:8645   # or https://testnet.quantova.io
 ```
 
@@ -24,4 +24,4 @@ node qns_resolve.js
 Each file's header shows the idiomatic QCore.js API for that task. The runnable body
 calls the Quantova gateway directly through a small helper (`_common.js`), an HTTP
 POST to `/v1/<method>` with a flat JSON body, so the samples run without the
-`@qunatovainc/qcore` package installed.
+`@quantovainc/qcore` package installed.

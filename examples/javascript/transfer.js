@@ -15,7 +15,7 @@
  *
  * In a full app with QCore.js installed
  *
- *   const { QCore } = require('@qunatovainc/qcore');
+ *   const { QCore } = require('@quantovainc/qcore');
  *   const q = new QCore(process.env.QUANTOVA_GATEWAY);
  *   const sender = q.wallet.create();                         // ML-DSA-65 account, Q1 address
  *   const signed = q.wallet.signTransfer(sender, {
@@ -23,7 +23,7 @@
  *   const hash = await q.submitTransaction(signed);
  *
  * This runnable version calls the gateway directly (see _common.js) so it works
- * without the @qunatovainc/qcore package installed.
+ * without the @quantovainc/qcore package installed.
  */
 'use strict';
 const { gw, toQtov, toQuon, banner } = require('./_common');

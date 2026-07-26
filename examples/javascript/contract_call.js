@@ -16,7 +16,7 @@
  *   node contract_call.js
  *
  * In a full app with QCore.js installed
- *   const { QCore } = require('@qunatovainc/qcore');
+ *   const { QCore } = require('@quantovainc/qcore');
  *   const q = new QCore(process.env.QUANTOVA_GATEWAY);
  *   const token = q.contract(TOKEN);
  *   const bal = await token.balanceOf(HOLDER);                // a single word map value

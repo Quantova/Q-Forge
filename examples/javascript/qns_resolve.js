@@ -13,7 +13,7 @@
  *   node qns_resolve.js
  *
  * In a full app with QCore.js installed
- *   const { QCore } = require('@qunatovainc/qcore');
+ *   const { QCore } = require('@quantovainc/qcore');
  *   const q = new QCore(process.env.QUANTOVA_GATEWAY);
  *   const qns = q.qns(QNS_REGISTRY);
  *   const addr = await qns.resolve('alice.Q');     // returns a Q1 address or null

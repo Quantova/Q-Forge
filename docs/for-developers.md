@@ -8,7 +8,7 @@ with ChaCha20-Poly1305.
 ## Set up
 
 ```bash
-npm install @qunatovainc/qcore      # or: pip install qcore
+npm install @quantovainc/qcore      # or: pip install qcore
 export QUANTOVA_GATEWAY=https://testnet.quantova.io
 ```
 
@@ -25,7 +25,7 @@ account = q.get_account("Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C")
 ```
 
 ```js
-const { QCore } = require('@qunatovainc/qcore');
+const { QCore } = require('@quantovainc/qcore');
 const q = new QCore('https://testnet.quantova.io');
 const head = await q.head();
 const account = await q.getAccount('Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C');
