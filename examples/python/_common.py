@@ -48,7 +48,7 @@ def use_demo_backend():
             return hashlib.sha3_512(b"ml-dsa-65" + bytes(seed) + bytes(message)).digest()
 
         def ml_dsa_65_verify(self, public_key, message, signature):
-            return len(signature) == 64
+            return False
 
     crypto_backend.set_backend(_DemoBackend())
     return True

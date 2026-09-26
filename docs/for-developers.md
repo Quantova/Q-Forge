@@ -8,7 +8,7 @@ with ChaCha20-Poly1305.
 ## Set up
 
 ```bash
-npm install @quantovainc/qcore      # or: pip install qcore
+npm install @quantovainc/qcore      # or: pip install "git+https://github.com/Quantova/QCore.py"
 export QUANTOVA_GATEWAY=https://testnet.quantova.io
 ```
 

@@ -13,7 +13,7 @@ core QCore.rs.
 npm install @quantovainc/qcore
 
 # Python
-pip install qcore
+pip install "git+https://github.com/Quantova/QCore.py"
 ```
 
 ## 2. Choose a gateway

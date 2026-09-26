@@ -24,7 +24,7 @@ async function main() {
   banner('Quantova connect and read (QCore.js)');
 
   const info = await gw('node_info');
-  console.log(`Node ${info.version || info.node || 'quantovad'} on chain ${info.chain_id || info.chain || 'Q-test-net'}`);
+  console.log(`Node ${info.version || info.node || 'quantovad'} on chain ${info.chain_id || info.chain || 'Q-test-net-1'}`);
 
   const head = await gw('head');
   console.log(`Head height ${head.height}`);

@@ -27,7 +27,7 @@ external security audit.
 Connect to the Quantova gateway and read the chain, no keys required.
 
 ```python
-# QCore.py  (pip install qcore)
+# QCore.py  (pip install "git+https://github.com/Quantova/QCore.py")
 from qcore import QCore
 
 q = QCore("https://testnet.quantova.io")
@@ -114,7 +114,7 @@ register names with QNS.
 ```bash
 # Python
 cd examples/python
-pip install qcore
+pip install "git+https://github.com/Quantova/QCore.py"
 export QUANTOVA_GATEWAY=https://testnet.quantova.io
 python connect.py
 

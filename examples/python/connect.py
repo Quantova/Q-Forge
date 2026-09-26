@@ -22,7 +22,7 @@ def main():
     q = connect()
 
     info = q.node_info()
-    print(f"Node {info.get('version', 'quantovad')} on chain {info.get('chain_id', 'Q-test-net')}")
+    print(f"Node {info.get('version', 'quantovad')} on chain {info.get('chain_id', 'Q-test-net-1')}")
 
     head = q.head()
     print(f"Head height {head['height']}")
