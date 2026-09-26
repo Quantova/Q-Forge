@@ -30,18 +30,18 @@ Connect to the Quantova gateway and read the chain, no keys required.
 # QCore.py  (pip install "git+https://github.com/Quantova/QCore.py")
 from qcore import QCore
 
-q = QCore("https://testnet.quantova.io")
+q = QCore("https://rpc-testnet.quantova.org")
 print("head   ", q.head()["height"])
-print("account", q.get_account("Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C")["balance"])
+print("account", q.get_account("Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U")["balance"])
 ```
 
 ```js
 // QCore.js  (npm install @quantovainc/qcore)
 const { QCore } = require('@quantovainc/qcore');
 
-const q = new QCore('https://testnet.quantova.io');
+const q = new QCore('https://rpc-testnet.quantova.org');
 console.log('head   ', (await q.head()).height);
-console.log('account', (await q.getAccount('Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C')).balance);
+console.log('account', (await q.getAccount('Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U')).balance);
 ```
 
 Build and submit an ML-DSA-65 signed transfer.
@@ -49,7 +49,7 @@ Build and submit an ML-DSA-65 signed transfer.
 ```python
 # derive an ML-DSA-65 account, its Q1 address begins with a capital Q
 sender = q.wallet.create()
-signed = q.wallet.sign_transfer(sender, to="Q1GP3FR9CVK3XAJSQGC7DU47WCDUVTFDYMY0H82C", amount=1_500_000)
+signed = q.wallet.sign_transfer(sender, to="Q183S36Y03SZF3GASV6QA78PZMRTH3Z63PD8Y2PAXLZR622HDENEVS96FS7W", amount=1_500_000)
 q.submit_transaction(signed)   # amount is in Quon, one QTOV is one million Quon
 ```
 
@@ -99,7 +99,7 @@ with a flat JSON body. There is no WebSocket transport.
 
 | Environment | Gateway base URL |
 |---|---|
-| Testnet | `https://testnet.quantova.io` |
+| Testnet | `https://rpc-testnet.quantova.org` |
 | Local dev | `http://127.0.0.1:8645` |
 
 Mainnet is not yet live. The gateway methods are `node_info`, `head`, `validators`,
@@ -115,13 +115,13 @@ register names with QNS.
 # Python
 cd examples/python
 pip install "git+https://github.com/Quantova/QCore.py"
-export QUANTOVA_GATEWAY=https://testnet.quantova.io
+export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 python connect.py
 
 # JavaScript
 cd examples/javascript
 npm install @quantovainc/qcore
-export QUANTOVA_GATEWAY=https://testnet.quantova.io
+export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 node connect.js
 ```
 

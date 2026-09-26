@@ -5,7 +5,7 @@
  * Shared configuration and helpers for the Quantova JavaScript examples.
  *
  * Point QUANTOVA_GATEWAY at any gateway.
- *   export QUANTOVA_GATEWAY=https://testnet.quantova.io   // public testnet
+ *   export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   // public testnet
  *   export QUANTOVA_GATEWAY=http://127.0.0.1:8645          // local node (default)
  *
  * These examples talk to the Quantova gateway the same way QCore.js does. Every

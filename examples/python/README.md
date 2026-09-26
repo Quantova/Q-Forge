@@ -4,7 +4,7 @@ Runnable samples using the official Python client. Point them at any gateway.
 
 ```bash
 pip install "git+https://github.com/Quantova/QCore.py"
-export QUANTOVA_GATEWAY=http://127.0.0.1:8645   # or https://testnet.quantova.io
+export QUANTOVA_GATEWAY=http://127.0.0.1:8645   # or https://rpc-testnet.quantova.org
 ```
 
 | File | What it shows |

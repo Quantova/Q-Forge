@@ -22,7 +22,7 @@
 'use strict';
 const { gw, banner } = require('./_common');
 
-const QNS_REGISTRY = 'Q1SNR7WZ2K9V5C3XM8H6U0AGNE2STV4YP93QDF';   // example QNS registry container
+const QNS_REGISTRY = 'Q18VTHEEPLE42HWD0QPX3QXPCX7FGC08SJ7WJHLWM2832D0H5V20VQDL3L3M';   // example QNS registry container
 const NAME = 'alice.Q';
 
 async function main() {

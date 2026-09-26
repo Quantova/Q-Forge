@@ -23,13 +23,13 @@ flat JSON body. There is no WebSocket transport.
 
 | Environment | Gateway base URL |
 |---|---|
-| Testnet | `https://testnet.quantova.io` |
+| Testnet | `https://rpc-testnet.quantova.org` |
 | Local dev | `http://127.0.0.1:8645` |
 
 Mainnet is not yet live. Quantova is at the testnet and pre audit stage.
 
 ```bash
-export QUANTOVA_GATEWAY=https://testnet.quantova.io
+export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 ```
 
 ## 3. Connect and read
@@ -37,14 +37,14 @@ export QUANTOVA_GATEWAY=https://testnet.quantova.io
 ```python
 # QCore.py
 from qcore import QCore
-q = QCore("https://testnet.quantova.io")
+q = QCore("https://rpc-testnet.quantova.org")
 print("head", q.head()["height"])
 ```
 
 ```js
 // QCore.js
 const { QCore } = require('@quantovainc/qcore');
-const q = new QCore('https://testnet.quantova.io');
+const q = new QCore('https://rpc-testnet.quantova.org');
 console.log('head', (await q.head()).height);
 ```
 

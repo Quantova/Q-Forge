@@ -7,25 +7,25 @@ runnable programs, see [../examples](../examples).
 
 ```python
 from qcore import QCore
-q = QCore("https://testnet.quantova.io")
+q = QCore("https://rpc-testnet.quantova.org")
 print(q.head()["height"])
 ```
 
 ```js
 const { QCore } = require('@quantovainc/qcore');
-const q = new QCore('https://testnet.quantova.io');
+const q = new QCore('https://rpc-testnet.quantova.org');
 console.log((await q.head()).height);
 ```
 
 ## Read an account
 
 ```python
-account = q.get_account("Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C")
+account = q.get_account("Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U")
 print(account["balance"])   # in Quon, one QTOV is one million Quon
 ```
 
 ```js
-const account = await q.getAccount('Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C');
+const account = await q.getAccount('Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U');
 ```
 
 ## Create an ML-DSA-65 account

@@ -9,7 +9,7 @@ balance and nonce, reading the fee from the chain parameters, deriving an ML-DSA
 account, and signing the transfer before submitting it through the gateway.
 
 Run
-    export QUANTOVA_GATEWAY=http://127.0.0.1:8645   # or https://testnet.quantova.io
+    export QUANTOVA_GATEWAY=http://127.0.0.1:8645   # or https://rpc-testnet.quantova.org
     python transfer.py
 
 This example registers a DEMO post quantum backend so it runs end to end offline.
@@ -19,7 +19,7 @@ API is identical.
 
 from _common import banner, connect, to_quon, to_qtov, use_demo_backend
 
-RECIPIENT = "Q1GP3FR9CVK3XAJSQGC7DU47WCDUVTFDYMY0H82C"  # example Q1 address, replace with a real one
+RECIPIENT = "Q183S36Y03SZF3GASV6QA78PZMRTH3Z63PD8Y2PAXLZR622HDENEVS96FS7W"  # example Q1 address, replace with a real one
 AMOUNT_QTOV = 1.5
 
 

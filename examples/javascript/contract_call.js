@@ -26,8 +26,8 @@
 'use strict';
 const { gw, banner } = require('./_common');
 
-const TOKEN = 'Q1QDF7WZ2R9V5C3XM8H6U0AGNE2SKTV4YP9CJ3';   // example QAsset container
-const HOLDER = 'Q1GP3FR9CVK3XAJSQGC7DU47WCDUVTFDYMY0H82C'; // example holder
+const TOKEN = 'Q1JN2VUARA2YQ2ALQX2JUAPKLJK43TZ0VRYAWVZZ8U4ESWZG8UJZ0QA2SMVK';   // example QAsset container
+const HOLDER = 'Q183S36Y03SZF3GASV6QA78PZMRTH3Z63PD8Y2PAXLZR622HDENEVS96FS7W'; // example holder
 
 async function main() {
   banner('Quantova example, QVM container call (QAsset) (QCore.js)');

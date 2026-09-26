@@ -6,7 +6,7 @@
 Each example imports connect() to get a configured QCore client and small
 formatting helpers. Point QUANTOVA_GATEWAY at any gateway.
 
-    export QUANTOVA_GATEWAY=https://testnet.quantova.io   # public testnet
+    export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   # public testnet
     export QUANTOVA_GATEWAY=http://127.0.0.1:8645          # local node (default)
 
 Every gateway call is an HTTP POST to /v1/<method> with a flat JSON body.

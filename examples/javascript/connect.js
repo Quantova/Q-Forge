@@ -6,7 +6,7 @@
  * Connect to Quantova and read chain state (QCore.js).
  *
  * Run
- *   export QUANTOVA_GATEWAY=http://127.0.0.1:8645   // or https://testnet.quantova.io
+ *   export QUANTOVA_GATEWAY=http://127.0.0.1:8645   // or https://rpc-testnet.quantova.org
  *   node connect.js
  *
  * In a full app with QCore.js installed
@@ -18,7 +18,7 @@
 'use strict';
 const { gw, toQtov, banner } = require('./_common');
 
-const ADDRESS = 'Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C';
+const ADDRESS = 'Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U';
 
 async function main() {
   banner('Quantova connect and read (QCore.js)');

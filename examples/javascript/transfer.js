@@ -10,7 +10,7 @@
  * ML-DSA-65 signed transfer submitted through the gateway.
  *
  * Run
- *   export QUANTOVA_GATEWAY=http://127.0.0.1:8645   // or https://testnet.quantova.io
+ *   export QUANTOVA_GATEWAY=http://127.0.0.1:8645   // or https://rpc-testnet.quantova.org
  *   node transfer.js
  *
  * In a full app with QCore.js installed
@@ -28,8 +28,8 @@
 'use strict';
 const { gw, toQtov, toQuon, banner } = require('./_common');
 
-const SENDER = 'Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C';     // example Q1 address
-const RECIPIENT = 'Q1GP3FR9CVK3XAJSQGC7DU47WCDUVTFDYMY0H82C';   // example Q1 address
+const SENDER = 'Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U';     // example Q1 address
+const RECIPIENT = 'Q183S36Y03SZF3GASV6QA78PZMRTH3Z63PD8Y2PAXLZR622HDENEVS96FS7W';   // example Q1 address
 const AMOUNT_QTOV = 1.5;
 
 async function main() {

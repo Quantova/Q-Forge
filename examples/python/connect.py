@@ -8,13 +8,13 @@ The simplest use of the Quantova tools, point the client at a gateway and read t
 chain. No keys, no signing.
 
 Run
-    export QUANTOVA_GATEWAY=http://127.0.0.1:8645   # or https://testnet.quantova.io
+    export QUANTOVA_GATEWAY=http://127.0.0.1:8645   # or https://rpc-testnet.quantova.org
     python connect.py
 """
 
 from _common import banner, connect, to_qtov
 
-ADDRESS = "Q1GZD3AGFY5U426V9NX6UNE06ZC4YVKNK3GU9L3C"  # any Q1 address to inspect
+ADDRESS = "Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U"  # any Q1 address to inspect
 
 
 def main():

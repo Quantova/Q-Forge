@@ -26,7 +26,7 @@ See [post-quantum-overview.md](post-quantum-overview.md).
 
 ## Adoption path
 
-1. **Evaluate on testnet.** Build against `https://testnet.quantova.io` with
+1. **Evaluate on testnet.** Build against `https://rpc-testnet.quantova.org` with
    QCore.js and QCore.py and free TQTOV from the faucet. No spend, full stack.
 2. **Integrate the clients.** Use QCore.js for web and Node services and QCore.py
    for backends, data, and automation to read state and submit ML-DSA-65 signed

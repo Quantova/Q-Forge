@@ -23,7 +23,8 @@ chain.
 * **Hash based signatures**, SLH-DSA (FIPS 205).
 * **Hashing**, SHA-3 and SHAKE (FIPS 202). Hash functions are not broken by the
   quantum attack that breaks elliptic curves.
-* **Transport channel**, ChaCha20-Poly1305.
+* **Node to node channel**, ML-KEM-768 key exchange sealed with ChaCha20-Poly1305. A
+  client reaches the gateway over ordinary HTTPS.
 
 ## Accounts and addresses
 
