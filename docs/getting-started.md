@@ -10,10 +10,11 @@ core QCore.rs.
 
 ```bash
 # JavaScript and TypeScript
-npm install @quantovainc/qcore
+npm install @quantovainc/qcore@0.4.2
 
 # Python
-pip install "git+https://github.com/Quantova/QCore.py"
+git clone --branch v0.4.0 https://github.com/Quantova/QCore.py
+(cd QCore.py && maturin develop)
 ```
 
 ## 2. Choose a gateway
@@ -34,18 +35,22 @@ export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 
 ## 3. Connect and read
 
+Install QCore.js with `npm install @quantovainc/qcore@0.4.2` and QCore.py from its v0.4.0 tag with `maturin develop`, as its README describes.
+
 ```python
-# QCore.py
-from qcore import QCore
-q = QCore("https://rpc-testnet.quantova.org")
-print("head", q.head()["height"])
+from qcore import Client, Network
+
+c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
+print("head   ", c.head()["height"])
+print("account", c.account("Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0")["balance"])
 ```
 
 ```js
-// QCore.js
-const { QCore } = require('@quantovainc/qcore');
-const q = new QCore('https://rpc-testnet.quantova.org');
-console.log('head', (await q.head()).height);
+const { Client, Network } = require('@quantovainc/qcore');
+
+const c = new Client('https://rpc-testnet.quantova.org', { network: Network.testnet() });
+console.log('head   ', (await c.head()).height);
+console.log('account', (await c.account('Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0')).balance);
 ```
 
 Runnable versions are [../examples/python/connect.py](../examples/python/connect.py)
@@ -72,8 +77,6 @@ million Quon, and the testnet asset is TQTOV.
 
 * Contracts on the QVM, deploy and call Quanta contracts, see
   [../examples/python/contract_call.py](../examples/python/contract_call.py).
-* Names with QNS, resolve names under the capital Q top level domain, see
-  [../examples/python/qns_resolve.py](../examples/python/qns_resolve.py).
 * Verify your work with the pq-test-vectors and node-conformance-tests tools.
 
 See the full [tools catalog](tools-catalog.md), [for developers](for-developers.md),

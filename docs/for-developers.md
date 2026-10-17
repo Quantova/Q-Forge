@@ -9,7 +9,7 @@ gateway over ordinary HTTPS.
 ## Set up
 
 ```bash
-npm install @quantovainc/qcore      # or: pip install "git+https://github.com/Quantova/QCore.py"
+npm install @quantovainc/qcore@0.4.2
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 ```
 
@@ -19,17 +19,19 @@ Get a wallet with QMask and free TQTOV from the faucet as in
 ## Read state
 
 ```python
-from qcore import QCore
-q = QCore("https://rpc-testnet.quantova.org")
-head = q.head()
-account = q.get_account("Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U")
+from qcore import Client, Network
+
+c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
+print("head   ", c.head()["height"])
+print("account", c.account("Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0")["balance"])
 ```
 
 ```js
-const { QCore } = require('@quantovainc/qcore');
-const q = new QCore('https://rpc-testnet.quantova.org');
-const head = await q.head();
-const account = await q.getAccount('Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U');
+const { Client, Network } = require('@quantovainc/qcore');
+
+const c = new Client('https://rpc-testnet.quantova.org', { network: Network.testnet() });
+console.log('head   ', (await c.head()).height);
+console.log('account', (await c.account('Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0')).balance);
 ```
 
 Under the client, each read is an HTTP POST to a gateway method such as `head`,
@@ -39,16 +41,18 @@ Under the client, each read is an HTTP POST to a gateway method such as `head`,
 ## Submit a transaction, signed with ML-DSA-65
 
 ```python
-# QCore.py, derive an account and sign a transfer
-from qcore import QCore
-q = QCore("https://rpc-testnet.quantova.org")
-sender = q.wallet.create()                 # Q1 address begins with a capital Q
-signed = q.wallet.sign_transfer(sender, to=RECIPIENT, amount=1_500_000)  # Quon
-q.submit_transaction(signed)
+with open("account.seed", encoding="ascii") as f:
+    seed = bytes.fromhex(f.read().strip())
+signed, outcome = c.transfer(seed, 0, RECIPIENT, 1_500_000, "1000")
 ```
 
-A real app registers Quantova's native Q-Crypto backend and submits through the
-client. The wallet API is the shape shown in the examples. See
+```js
+const seed = Uint8Array.from(Buffer.from(fs.readFileSync('account.seed', 'utf8').trim(), 'hex'));
+const { signed, outcome } = await c.transfer(seed, 0, RECIPIENT, 1_500_000n, '1000');
+seed.fill(0);
+```
+
+The seed file holds the 64 hex character seed of a funded account and must be readable only by you. Amounts are whole numbers of Quon, one QTOV is one million Quon, and the last argument is the largest fee you allow, so the client refuses to sign if the gateway reports a higher fee. See
 [../examples/python/transfer.py](../examples/python/transfer.py) and
 [../examples/javascript/transfer.js](../examples/javascript/transfer.js).
 
@@ -61,28 +65,17 @@ executes. Quanta is designed so that whole classes of vulnerability are caught a
 compile time. You read container state with `get_container` and `get_storage`, and
 you invoke a container by submitting a signed transaction.
 
-```python
-token = q.contract(TOKEN_ADDRESS)          # a QAsset contract, a compiled container
-balance = token.balance_of(HOLDER)          # a single word map value
-signed = token.build_transfer(sender, to=HOLDER, amount=25)
-q.submit_transaction(signed)
+```js
+const container = await c.container(CONTRACT);
+const storage = await c.storage(CONTRACT);
+const { signed, outcome } = await c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '50000');
 ```
+
+ARGS_HEX are the call arguments produced from the interface that the Quanta compiler emits for the contract. QCore.py offers the same call method, and container and storage reads are in QCore.js.
 
 QAsset is the fungible token standard and QCollectible is the non fungible
 standard. Full runnable code is in
 [../examples/python/contract_call.py](../examples/python/contract_call.py).
-
-## Resolve and use names, QNS
-
-```python
-qns = q.qns(QNS_REGISTRY)
-addr = qns.resolve("alice.Q")     # returns a Q1 address
-```
-
-Names live under the capital Q top level domain, for example `alice.Q`. Full
-runnable code is in
-[../examples/python/qns_resolve.py](../examples/python/qns_resolve.py). Register
-names with QNS.
 
 ## Verify your implementation
 

@@ -1,4 +1,4 @@
-# Secrets / keys (the examples use a demo backend, no real keys)
+# Secrets / keys
 .env
 .env.*
 *.key

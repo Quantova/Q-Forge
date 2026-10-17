@@ -1,57 +1,32 @@
-#!/usr/bin/env python3
 # Copyright 2026 Quantova Inc
 # SPDX-License-Identifier: Apache-2.0 OR MIT
 
-"""Example 2, QVM container call (QCore.py)
+import json
+import os
+import re
 
-Read from and invoke a QAsset token on the Quantova Virtual Machine. The QVM is a
-register machine that runs compiled containers. Contracts are written in Quanta and
-compiled to a container. You read container state through the gateway with
-get_container and get_storage, and you invoke a container by submitting an ML-DSA-65
-signed transaction.
-
-Run
-    export QUANTOVA_GATEWAY=http://127.0.0.1:8645
-    python contract_call.py
-"""
-
-from _common import banner, connect, use_demo_backend
-
-TOKEN = "Q1JN2VUARA2YQ2ALQX2JUAPKLJK43TZ0VRYAWVZZ8U4ESWZG8UJZ0QA2SMVK"    # example QAsset container
-HOLDER = "Q183S36Y03SZF3GASV6QA78PZMRTH3Z63PD8Y2PAXLZR622HDENEVS96FS7W"  # example holder
+from _common import QSTAMP_CONTRACT, banner, connect, index_of, read_seed
 
 
 def main():
-    banner("Quantova example, QVM container call (QAsset) (QCore.py)")
-    use_demo_backend()
-    q = connect()
-    print(f"Head height {q.head()['height']}")
-
-    # Confirm the container exists on chain.
-    container = q.get_container(TOKEN)
-    print(f"Token container {TOKEN}")
-    print(f"code size {container.get('size', 'n/a')} bytes")
-
-    token = q.contract(TOKEN)
-
-    # Read a QAsset balance. Secured contract state is a map from a 32 byte key to a
-    # single word value, so a balance reads back as one word.
-    bal = token.balance_of(HOLDER)
-    print(f"\nbalanceOf({HOLDER}) = {bal}  (a single word map value)")
-
-    # Build and ML-DSA-65 sign an invoke, transfer 25 units.
-    sender = q.wallet.create()
-    signed = token.build_transfer(sender, to=HOLDER, amount=25)
-    print(f"\nInvoke transfer 25 units of the QAsset, from {sender.address}")
-    print(f"ML-DSA-65 signature {signed.signature_hex[:34]}...")
-
-    try:
-        result = q.submit_transaction(signed)
-        print(f"Submitted. tx hash {result['hash']}")
-        tx = q.get_transaction(result["hash"])
-        print(f"status {tx.get('status')}")
-    except Exception as e:
-        print(f"(submit step {e})")
+    banner("Quantova QVM container call with QCore.py")
+    c = connect()
+    print(f"Head {c.head()['height']}")
+    contract = os.environ.get("QUANTOVA_CONTRACT", QSTAMP_CONTRACT)
+    print(f"Container {contract}")
+    seed = read_seed()
+    args = os.environ.get("QUANTOVA_CALL_ARGS")
+    if seed is None or not args:
+        print("\nTo call the container, set QUANTOVA_SEED_FILE and QUANTOVA_CALL_ARGS, the hex call arguments")
+        print("produced from the interface that the Quanta compiler emits for the contract.")
+        return
+    if not re.fullmatch(r"(?:[0-9a-f]{2})+", args):
+        raise ValueError("QUANTOVA_CALL_ARGS is lowercase hex")
+    meter = int(os.environ.get("QUANTOVA_METER", "30000"))
+    max_fee = os.environ.get("QUANTOVA_MAX_FEE", "50000")
+    signed, outcome = c.call(seed, index_of(), contract, args, meter, max_fee)
+    print(f"Submitted {signed['tx_id']}, signed with ML-DSA-65")
+    print(json.dumps(outcome))
 
 
 if __name__ == "__main__":

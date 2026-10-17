@@ -26,45 +26,49 @@ external security audit.
 
 Connect to the Quantova gateway and read the chain, no keys required.
 
-```python
-# QCore.py  (pip install "git+https://github.com/Quantova/QCore.py")
-from qcore import QCore
+Install QCore.js with `npm install @quantovainc/qcore@0.4.2` and QCore.py from its v0.4.0 tag with `maturin develop`, as its README describes.
 
-q = QCore("https://rpc-testnet.quantova.org")
-print("head   ", q.head()["height"])
-print("account", q.get_account("Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U")["balance"])
+```python
+from qcore import Client, Network
+
+c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
+print("head   ", c.head()["height"])
+print("account", c.account("Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0")["balance"])
 ```
 
 ```js
-// QCore.js  (npm install @quantovainc/qcore)
-const { QCore } = require('@quantovainc/qcore');
+const { Client, Network } = require('@quantovainc/qcore');
 
-const q = new QCore('https://rpc-testnet.quantova.org');
-console.log('head   ', (await q.head()).height);
-console.log('account', (await q.getAccount('Q1VYSLG0VFZ73N4EM86E7YECA0EERNVJP254FLAVJ7UKE987UCLTQSUF6H9U')).balance);
+const c = new Client('https://rpc-testnet.quantova.org', { network: Network.testnet() });
+console.log('head   ', (await c.head()).height);
+console.log('account', (await c.account('Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0')).balance);
 ```
 
 Build and submit an ML-DSA-65 signed transfer.
 
 ```python
-# derive an ML-DSA-65 account, its Q1 address begins with a capital Q
-sender = q.wallet.create()
-signed = q.wallet.sign_transfer(sender, to="Q183S36Y03SZF3GASV6QA78PZMRTH3Z63PD8Y2PAXLZR622HDENEVS96FS7W", amount=1_500_000)
-q.submit_transaction(signed)   # amount is in Quon, one QTOV is one million Quon
+with open("account.seed", encoding="ascii") as f:
+    seed = bytes.fromhex(f.read().strip())
+signed, outcome = c.transfer(seed, 0, RECIPIENT, 1_500_000, "1000")
 ```
 
-Read a QAsset token balance from its container storage.
-
-```python
-token = q.contract(TOKEN_ADDRESS)          # a Quanta contract, a compiled container
-balance = token.balance_of(HOLDER)          # a single word map value
+```js
+const seed = Uint8Array.from(Buffer.from(fs.readFileSync('account.seed', 'utf8').trim(), 'hex'));
+const { signed, outcome } = await c.transfer(seed, 0, RECIPIENT, 1_500_000n, '1000');
+seed.fill(0);
 ```
 
-Resolve a name under the capital Q top level domain.
+The seed file holds the 64 hex character seed of a funded account and must be readable only by you. Amounts are whole numbers of Quon, one QTOV is one million Quon, and the last argument is the largest fee you allow, so the client refuses to sign if the gateway reports a higher fee.
 
-```python
-addr = q.qns(QNS_REGISTRY).resolve("alice.Q")   # returns a Q1 address
+Read a QVM container and call it.
+
+```js
+const container = await c.container(CONTRACT);
+const storage = await c.storage(CONTRACT);
+const { signed, outcome } = await c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '50000');
 ```
+
+ARGS_HEX are the call arguments produced from the interface that the Quanta compiler emits for the contract. QCore.py offers the same call method, and container and storage reads are in QCore.js.
 
 Full runnable programs for each of these are in [examples/](examples), in both
 QCore.js and QCore.py, and copy paste snippets are in [snippets/](snippets).
@@ -114,13 +118,14 @@ register names with QNS.
 ```bash
 # Python
 cd examples/python
-pip install "git+https://github.com/Quantova/QCore.py"
+git clone --branch v0.4.0 https://github.com/Quantova/QCore.py
+(cd QCore.py && maturin develop)
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 python connect.py
 
 # JavaScript
 cd examples/javascript
-npm install @quantovainc/qcore
+npm ci
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 node connect.js
 ```

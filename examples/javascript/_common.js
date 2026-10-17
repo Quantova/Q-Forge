@@ -1,72 +1,48 @@
 // Copyright 2026 Quantova Inc
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
-/**
- * Shared configuration and helpers for the Quantova JavaScript examples.
- *
- * Point QUANTOVA_GATEWAY at any gateway.
- *   export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   // public testnet
- *   export QUANTOVA_GATEWAY=http://127.0.0.1:8645          // local node (default)
- *
- * These examples talk to the Quantova gateway the same way QCore.js does. Every
- * call is an HTTP POST to /v1/<method> with a flat JSON body. In a full app you
- * use the QCore facade directly (see the README). Here a tiny gateway helper is
- * included so the examples run without installing @quantovainc/qcore, while the
- * QCore.js API shape is shown in comments.
- */
 'use strict';
 
-const http = require('http');
-const https = require('https');
-const { URL } = require('url');
+const fs = require('fs');
+const { Client, Network } = require('@quantovainc/qcore');
 
-const GATEWAY = process.env.QUANTOVA_GATEWAY || 'http://127.0.0.1:8645';
-
-// One QTOV is one million Quon. Quon is the base unit.
+const GATEWAY = process.env.QUANTOVA_GATEWAY || 'https://rpc-testnet.quantova.org';
+const QSTAMP_CONTRACT = 'Q1D6TZFRL203P3DFAFVUPZUHGUCM4EWGH6063XNS42VA5235RNQWXS7FXEWX';
 const QUON = 1_000_000n;
 
-/** POST /v1/<method> with a flat JSON body, return the parsed JSON result. */
-function gw(method, body = {}, base = GATEWAY) {
-  const payload = JSON.stringify(body);
-  const u = new URL(base.replace(/\/+$/, '') + '/v1/' + method);
-  const lib = u.protocol === 'https:' ? https : http;
-  const opts = {
-    method: 'POST',
-    hostname: u.hostname,
-    port: u.port || (u.protocol === 'https:' ? 443 : 80),
-    path: u.pathname,
-    headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(payload) },
-  };
-  return new Promise((resolve, reject) => {
-    const req = lib.request(opts, (res) => {
-      let data = '';
-      res.on('data', (c) => (data += c));
-      res.on('end', () => {
-        try {
-          const j = data ? JSON.parse(data) : {};
-          if (j && j.error) return reject(new Error(j.error.message || JSON.stringify(j.error)));
-          resolve(j);
-        } catch (e) { reject(e); }
-      });
-    });
-    req.on('error', reject);
-    req.write(payload);
-    req.end();
-  });
+function client() {
+  return new Client(GATEWAY, { network: Network.testnet() });
 }
 
-const big = (v) => (typeof v === 'string' ? BigInt(v) : BigInt(v));
-
-/** Format an integer Quon amount as a human QTOV string. */
 function toQtov(quon) {
-  const p = big(quon);
+  const p = BigInt(quon);
   const whole = p / QUON;
   const frac = (p % QUON).toString().padStart(6, '0').replace(/0+$/, '');
   return frac ? `${whole}.${frac}` : `${whole}`;
 }
 
-/** Convert a QTOV amount to integer Quon. */
-const toQuon = (qtov) => BigInt(Math.round(Number(qtov) * 1e6));
+function toQuon(qtov) {
+  const text = String(qtov);
+  if (!/^(0|[1-9][0-9]{0,12})(\.[0-9]{1,6})?$/.test(text)) throw new Error('an amount is a decimal number of QTOV with at most six decimal places');
+  const [whole, frac = ''] = text.split('.');
+  return BigInt(whole) * QUON + BigInt(frac.padEnd(6, '0'));
+}
+
+function readSeed() {
+  const file = process.env.QUANTOVA_SEED_FILE;
+  if (!file) return null;
+  const st = fs.lstatSync(file);
+  if (!st.isFile() || (st.mode & 0o077) !== 0) throw new Error('the seed file must be a regular file readable only by its owner, chmod 600');
+  const hex = fs.readFileSync(file, 'utf8').trim();
+  if (!/^[0-9a-f]{64}$/.test(hex)) throw new Error('the seed file holds 64 lowercase hex characters');
+  return Uint8Array.from(Buffer.from(hex, 'hex'));
+}
+
+function indexOf() {
+  const text = process.env.QUANTOVA_INDEX || '0';
+  if (!/^(0|[1-9][0-9]{0,8})$/.test(text)) throw new Error('QUANTOVA_INDEX is a whole number');
+  return Number(text);
+}
 
 function banner(title) {
   const line = '='.repeat(64);
@@ -75,4 +51,4 @@ function banner(title) {
   console.log(line);
 }
 
-module.exports = { gw, big, toQtov, toQuon, banner, GATEWAY, QUON };
+module.exports = { client, toQtov, toQuon, readSeed, indexOf, banner, GATEWAY, QSTAMP_CONTRACT, QUON };
