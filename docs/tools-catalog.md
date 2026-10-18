@@ -37,7 +37,7 @@ the Quon, and one QTOV is one million Quon. The testnet asset is TQTOV.
 | **node-conformance-tests** | Read only node checker | Confirm a running node is a canonical Quantova node with healthy QORUS consensus and finality |
 
 Both verification tools are read only and hold no keys. They confirm correctness
-and conformance. They are not a security audit. External audits are still ahead.
+and conformance.
 
 ## How the tools fit together
 

@@ -4,10 +4,9 @@ How an organization adopts the Quantova tools and builds on Quantova, a post
 quantum Layer 1 blockchain. This is aimed at teams evaluating Quantova for
 products, treasury, infrastructure, or compliance reasons.
 
-Quantova is on testnet, ahead of a mainnet launch, and has not yet completed
-external security audit. Plan around that. The stack is post quantum across the
-whole design, with keys, signatures, and finality built on the NIST post quantum
-standards.
+The Quantova network is live, and its native asset TQTOV runs on test ahead of
+the mainnet launch. The stack is post quantum across the whole design, with keys,
+signatures, and finality built on the NIST post quantum standards.
 
 ## Why post quantum matters for an organization
 
@@ -52,7 +51,7 @@ The verification tools let an organization check what it runs and integrates.
 
 Both tools are read only and hold no keys, so they are safe to run in your
 infrastructure and safe to wire into automated checks. They confirm correctness and
-conformance. They are not a substitute for the external audits still ahead.
+conformance.
 
 ## What to standardize internally
 

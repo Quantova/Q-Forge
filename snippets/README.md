@@ -1,7 +1,7 @@
 # Snippets
 
 Short copy paste code for common Quantova tasks, in QCore.js and QCore.py. For full
-runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.6.1` and QCore.py from its v0.6.1 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
+runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.7.0` and QCore.py from its v0.7.0 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
 
 ## Connect and read an account
 

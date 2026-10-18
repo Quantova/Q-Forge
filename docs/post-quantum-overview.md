@@ -58,5 +58,4 @@ inherits it.
 
 Quantova is post quantum across the whole stack, with keys, signatures, finality,
 and randomness built on the NIST post quantum standards and designed to withstand
-both classical and quantum attack. The network is on testnet and has not yet
-completed external security audit.
+both classical and quantum attack.

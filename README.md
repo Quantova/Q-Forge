@@ -11,8 +11,8 @@ published FIPS documents, so the keys, signatures, and hashing that secure the
 network are designed to withstand both classical and quantum attack. Account
 authority uses ML-DSA-65 under FIPS 204.
 
-Quantova is on testnet, ahead of a mainnet launch, and has not yet completed
-external security audit.
+The Quantova network is live, and its native asset TQTOV runs on test ahead of
+the mainnet launch.
 
 ## Start here
 
@@ -26,7 +26,7 @@ external security audit.
 
 Connect to the Quantova gateway and read the chain, no keys required.
 
-Install QCore.js with `npm install @quantovainc/qcore@0.6.1` and QCore.py from its v0.6.1 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
+Install QCore.js with `npm install @quantovainc/qcore@0.7.0` and QCore.py from its v0.7.0 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
 
 ```python
 from quantova_qcore import Client, Network
@@ -120,8 +120,8 @@ register names with QNS.
 ```bash
 # Python
 cd examples/python
-git clone --branch v0.6.1 https://github.com/Quantova/QCore.rs
-git clone --branch v0.6.1 https://github.com/Quantova/QCore.py
+git clone --branch v0.7.0 https://github.com/Quantova/QCore.rs
+git clone --branch v0.7.0 https://github.com/Quantova/QCore.py
 (cd QCore.py && maturin develop)
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 python connect.py

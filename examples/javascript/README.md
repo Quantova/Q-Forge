@@ -7,7 +7,7 @@ npm ci
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   # or http://127.0.0.1:8645
 ```
 
-`npm ci` installs the pinned `@quantovainc/qcore` 0.6.1 from the lockfile.
+`npm ci` installs the pinned `@quantovainc/qcore` 0.7.0 from the lockfile.
 
 | File | What it shows |
 |---|---|

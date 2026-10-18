@@ -10,11 +10,11 @@ core QCore.rs.
 
 ```bash
 # JavaScript and TypeScript
-npm install @quantovainc/qcore@0.6.1
+npm install @quantovainc/qcore@0.7.0
 
 # Python
-git clone --branch v0.6.1 https://github.com/Quantova/QCore.rs
-git clone --branch v0.6.1 https://github.com/Quantova/QCore.py
+git clone --branch v0.7.0 https://github.com/Quantova/QCore.rs
+git clone --branch v0.7.0 https://github.com/Quantova/QCore.py
 (cd QCore.py && maturin develop)
 ```
 
@@ -36,7 +36,7 @@ export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 
 ## 3. Connect and read
 
-Install QCore.js with `npm install @quantovainc/qcore@0.6.1` and QCore.py from its v0.6.1 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
+Install QCore.js with `npm install @quantovainc/qcore@0.7.0` and QCore.py from its v0.7.0 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
 
 ```python
 from quantova_qcore import Client, Network

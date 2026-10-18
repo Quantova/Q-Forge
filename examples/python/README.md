@@ -3,8 +3,8 @@
 Runnable samples using the official Python client. Point them at any gateway.
 
 ```bash
-git clone --branch v0.6.1 https://github.com/Quantova/QCore.rs
-git clone --branch v0.6.1 https://github.com/Quantova/QCore.py
+git clone --branch v0.7.0 https://github.com/Quantova/QCore.rs
+git clone --branch v0.7.0 https://github.com/Quantova/QCore.py
 (cd QCore.py && maturin develop)
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   # or http://127.0.0.1:8645
 ```
