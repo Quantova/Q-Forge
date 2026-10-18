@@ -26,10 +26,10 @@ external security audit.
 
 Connect to the Quantova gateway and read the chain, no keys required.
 
-Install QCore.js with `npm install @quantovainc/qcore@0.4.2` and QCore.py from its v0.4.0 tag with `maturin develop`, as its README describes.
+Install QCore.js with `npm install @quantovainc/qcore@0.6.1` and QCore.py from its v0.6.1 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
 
 ```python
-from qcore import Client, Network
+from quantova_qcore import Client, Network
 
 c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
 print("head   ", c.head()["height"])
@@ -48,8 +48,9 @@ Build and submit an ML-DSA-65 signed transfer.
 
 ```python
 with open("account.seed", encoding="ascii") as f:
-    seed = bytes.fromhex(f.read().strip())
+    seed = bytearray.fromhex(f.read().strip())
 signed, outcome = c.transfer(seed, 0, RECIPIENT, 1_500_000, "1000")
+seed[:] = bytes(32)
 ```
 
 ```js
@@ -106,7 +107,8 @@ with a flat JSON body. There is no WebSocket transport.
 | Testnet | `https://rpc-testnet.quantova.org` |
 | Local dev | `http://127.0.0.1:8645` |
 
-Mainnet is not yet live. The gateway methods are `node_info`, `head`, `validators`,
+Mainnet is not yet live. The testnet chain is named Q-test-net-01, and the examples sign
+for it unless `QUANTOVA_CHAIN` names another chain, such as that of a local node. The gateway methods are `node_info`, `head`, `validators`,
 `chain_params`, `get_account`, `get_transaction`, `submit_transaction`,
 `get_block`, `supply`, `get_container`, `get_storage`, and `get_events`.
 
@@ -118,7 +120,8 @@ register names with QNS.
 ```bash
 # Python
 cd examples/python
-git clone --branch v0.4.0 https://github.com/Quantova/QCore.py
+git clone --branch v0.6.1 https://github.com/Quantova/QCore.rs
+git clone --branch v0.6.1 https://github.com/Quantova/QCore.py
 (cd QCore.py && maturin develop)
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 python connect.py

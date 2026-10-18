@@ -5,15 +5,19 @@ import os
 import re
 import stat
 
-from qcore import Client, Network
+from quantova_qcore import Client, Network
 
-GATEWAY = os.environ.get("QUANTOVA_GATEWAY", "https://rpc-testnet.quantova.org")
+TESTNET = Network.testnet()
+GATEWAY = os.environ.get("QUANTOVA_GATEWAY", TESTNET.rpc_url).rstrip("/")
 QSTAMP_CONTRACT = "Q1D6TZFRL203P3DFAFVUPZUHGUCM4EWGH6063XNS42VA5235RNQWXS7FXEWX"
 QUON = 1_000_000
 
 
 def connect():
-    return Client(GATEWAY, network=Network.testnet())
+    chain = os.environ.get("QUANTOVA_CHAIN") or TESTNET.chain_id
+    if GATEWAY == TESTNET.rpc_url and chain == TESTNET.chain_id:
+        return Client(GATEWAY, network=TESTNET)
+    return Client(GATEWAY, network=Network("custom", chain_id=chain, rpc_url=GATEWAY))
 
 
 def to_qtov(quon_value):
@@ -42,7 +46,28 @@ def read_seed():
         text = f.read().strip()
     if not re.fullmatch(r"[0-9a-f]{64}", text):
         raise ValueError("the seed file holds 64 lowercase hex characters")
-    return bytes.fromhex(text)
+    return bytearray.fromhex(text)
+
+
+def wipe(seed):
+    if seed is not None:
+        seed[:] = bytes(len(seed))
+
+
+def whole_env(name, fallback):
+    text = os.environ.get(name) or fallback
+    if not re.fullmatch(r"0|[1-9][0-9]{0,18}", text):
+        raise ValueError(f"{name} is a whole number")
+    return text
+
+
+def expected_nonce():
+    text = os.environ.get("QUANTOVA_NONCE")
+    if not text:
+        return None
+    if not re.fullmatch(r"0|[1-9][0-9]{0,18}", text):
+        raise ValueError("QUANTOVA_NONCE is a whole number")
+    return int(text)
 
 
 def index_of():

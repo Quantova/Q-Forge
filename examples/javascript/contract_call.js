@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
 'use strict';
-const { client, readSeed, indexOf, banner, QSTAMP_CONTRACT } = require('./_common');
+const { client, readSeed, indexOf, wholeEnv, expectedNonce, banner, QSTAMP_CONTRACT } = require('./_common');
 
 async function main() {
   banner('Quantova QVM container read and call with QCore.js');
@@ -21,13 +21,16 @@ async function main() {
     console.log('produced from the interface that the Quanta compiler emits for the contract.');
     return;
   }
-  if (!/^([0-9a-f]{2})+$/.test(args)) throw new Error('QUANTOVA_CALL_ARGS is lowercase hex');
-  const meter = BigInt(process.env.QUANTOVA_METER || '30000');
-  const maxFee = process.env.QUANTOVA_MAX_FEE || '50000';
-  const result = await c.call(seed, indexOf(), contract, args, meter, maxFee);
-  console.log(`Submitted ${result.signed.tx_id}, signed with ML-DSA-65`);
-  console.log(JSON.stringify(result.outcome));
-  seed.fill(0);
+  try {
+    if (!/^([0-9a-f]{2})+$/.test(args)) throw new Error('QUANTOVA_CALL_ARGS is lowercase hex');
+    const meter = BigInt(wholeEnv('QUANTOVA_METER', '30000'));
+    const maxFee = wholeEnv('QUANTOVA_MAX_FEE', '50000');
+    const result = await c.call(seed, indexOf(), contract, args, meter, maxFee, expectedNonce());
+    console.log(`Submitted ${result.signed.tx_id}, signed with ML-DSA-65`);
+    console.log(JSON.stringify(result.outcome));
+  } finally {
+    seed.fill(0);
+  }
 }
 
 main().catch((e) => { console.error('error', e.message); process.exit(1); });

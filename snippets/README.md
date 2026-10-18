@@ -1,12 +1,12 @@
 # Snippets
 
 Short copy paste code for common Quantova tasks, in QCore.js and QCore.py. For full
-runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.4.2` and QCore.py from its v0.4.0 tag with `maturin develop`, as its README describes.
+runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.6.1` and QCore.py from its v0.6.1 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
 
 ## Connect and read an account
 
 ```python
-from qcore import Client, Network
+from quantova_qcore import Client, Network
 
 c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
 print("head   ", c.head()["height"])
@@ -27,8 +27,9 @@ Balances are in Quon, one QTOV is one million Quon.
 
 ```python
 with open("account.seed", encoding="ascii") as f:
-    seed = bytes.fromhex(f.read().strip())
+    seed = bytearray.fromhex(f.read().strip())
 signed, outcome = c.transfer(seed, 0, RECIPIENT, 1_500_000, "1000")
+seed[:] = bytes(32)
 ```
 
 ```js

@@ -9,7 +9,7 @@ gateway over ordinary HTTPS.
 ## Set up
 
 ```bash
-npm install @quantovainc/qcore@0.4.2
+npm install @quantovainc/qcore@0.6.1
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 ```
 
@@ -19,7 +19,7 @@ Get a wallet with QMask and free TQTOV from the faucet as in
 ## Read state
 
 ```python
-from qcore import Client, Network
+from quantova_qcore import Client, Network
 
 c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
 print("head   ", c.head()["height"])
@@ -42,8 +42,9 @@ Under the client, each read is an HTTP POST to a gateway method such as `head`,
 
 ```python
 with open("account.seed", encoding="ascii") as f:
-    seed = bytes.fromhex(f.read().strip())
+    seed = bytearray.fromhex(f.read().strip())
 signed, outcome = c.transfer(seed, 0, RECIPIENT, 1_500_000, "1000")
+seed[:] = bytes(32)
 ```
 
 ```js

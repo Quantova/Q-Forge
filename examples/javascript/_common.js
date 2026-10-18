@@ -6,12 +6,23 @@
 const fs = require('fs');
 const { Client, Network } = require('@quantovainc/qcore');
 
-const GATEWAY = process.env.QUANTOVA_GATEWAY || 'https://rpc-testnet.quantova.org';
+const TESTNET = Network.testnet();
+const GATEWAY = (process.env.QUANTOVA_GATEWAY || TESTNET.rpcUrl).replace(/\/+$/, '');
 const QSTAMP_CONTRACT = 'Q1D6TZFRL203P3DFAFVUPZUHGUCM4EWGH6063XNS42VA5235RNQWXS7FXEWX';
 const QUON = 1_000_000n;
 
+function gatewayOnly(url, init) {
+  if (!String(url).startsWith(GATEWAY + '/v1/')) throw new Error('refusing a request outside the configured gateway');
+  return fetch(url, init);
+}
+
 function client() {
-  return new Client(GATEWAY, { network: Network.testnet() });
+  const chain = process.env.QUANTOVA_CHAIN;
+  return new Client(GATEWAY, {
+    network: GATEWAY === TESTNET.rpcUrl ? TESTNET : undefined,
+    expectedChainId: chain && chain.length > 0 ? chain : TESTNET.chainId,
+    fetch: gatewayOnly,
+  });
 }
 
 function toQtov(quon) {
@@ -38,6 +49,19 @@ function readSeed() {
   return Uint8Array.from(Buffer.from(hex, 'hex'));
 }
 
+function wholeEnv(name, fallback) {
+  const text = process.env[name] || fallback;
+  if (!/^(0|[1-9][0-9]{0,18})$/.test(text)) throw new Error(name + ' is a whole number');
+  return text;
+}
+
+function expectedNonce() {
+  const text = process.env.QUANTOVA_NONCE;
+  if (text === undefined || text === '') return undefined;
+  if (!/^(0|[1-9][0-9]{0,18})$/.test(text)) throw new Error('QUANTOVA_NONCE is a whole number');
+  return BigInt(text);
+}
+
 function indexOf() {
   const text = process.env.QUANTOVA_INDEX || '0';
   if (!/^(0|[1-9][0-9]{0,8})$/.test(text)) throw new Error('QUANTOVA_INDEX is a whole number');
@@ -51,4 +75,4 @@ function banner(title) {
   console.log(line);
 }
 
-module.exports = { client, toQtov, toQuon, readSeed, indexOf, banner, GATEWAY, QSTAMP_CONTRACT, QUON };
+module.exports = { client, toQtov, toQuon, readSeed, indexOf, wholeEnv, expectedNonce, banner, GATEWAY, QSTAMP_CONTRACT, QUON };

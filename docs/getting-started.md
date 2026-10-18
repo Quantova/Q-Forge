@@ -10,10 +10,11 @@ core QCore.rs.
 
 ```bash
 # JavaScript and TypeScript
-npm install @quantovainc/qcore@0.4.2
+npm install @quantovainc/qcore@0.6.1
 
 # Python
-git clone --branch v0.4.0 https://github.com/Quantova/QCore.py
+git clone --branch v0.6.1 https://github.com/Quantova/QCore.rs
+git clone --branch v0.6.1 https://github.com/Quantova/QCore.py
 (cd QCore.py && maturin develop)
 ```
 
@@ -27,7 +28,7 @@ flat JSON body. There is no WebSocket transport.
 | Testnet | `https://rpc-testnet.quantova.org` |
 | Local dev | `http://127.0.0.1:8645` |
 
-Mainnet is not yet live. Quantova is at the testnet and pre audit stage.
+Mainnet is not yet live. The live network is named Q-test-net-01, and the examples sign for it unless `QUANTOVA_CHAIN` names another chain, such as that of a local node.
 
 ```bash
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
@@ -35,10 +36,10 @@ export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 
 ## 3. Connect and read
 
-Install QCore.js with `npm install @quantovainc/qcore@0.4.2` and QCore.py from its v0.4.0 tag with `maturin develop`, as its README describes.
+Install QCore.js with `npm install @quantovainc/qcore@0.6.1` and QCore.py from its v0.6.1 tag, cloned next to QCore.rs at the same tag, with `maturin develop`, as its README describes. QCore.py imports as `quantova_qcore`.
 
 ```python
-from qcore import Client, Network
+from quantova_qcore import Client, Network
 
 c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
 print("head   ", c.head()["height"])
