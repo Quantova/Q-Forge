@@ -9,7 +9,7 @@ gateway over ordinary HTTPS.
 ## Set up
 
 ```bash
-npm install @quantovainc/qcore@0.7.0
+npm install @quantovainc/qcore@0.8.0
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 ```
 
@@ -19,19 +19,33 @@ Get a wallet with QMask and free TQTOV from the faucet as in
 ## Read state
 
 ```python
+import sys
+import unicodedata
+
 from quantova_qcore import Client, Network
 
-c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
-print("head   ", c.head()["height"])
-print("account", c.account("Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0")["balance"])
+printable = lambda v: "".join(ch for ch in str(v) if unicodedata.category(ch) not in ("Cc", "Cf", "Zl", "Zp"))
+
+try:
+    c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
+    print("head   ", printable(c.head()["height"]))
+    print("account", printable(c.account("Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0")["balance"]))
+except Exception as err:
+    sys.exit("error " + printable(err))
 ```
 
 ```js
 const { Client, Network } = require('@quantovainc/qcore');
 
-const c = new Client('https://rpc-testnet.quantova.org', { network: Network.testnet() });
-console.log('head   ', (await c.head()).height);
-console.log('account', (await c.account('Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0')).balance);
+const printable = (v) => String(v).replace(/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/gu, '');
+
+async function main() {
+  const c = new Client('https://rpc-testnet.quantova.org', { network: Network.testnet() });
+  console.log('head   ', printable((await c.head()).height));
+  console.log('account', printable((await c.account('Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0')).balance));
+}
+
+main().catch((e) => { console.error(printable(e.message)); process.exit(1); });
 ```
 
 Under the client, each read is an HTTP POST to a gateway method such as `head`,
@@ -41,19 +55,25 @@ Under the client, each read is an HTTP POST to a gateway method such as `head`,
 ## Submit a transaction, signed with ML-DSA-65
 
 ```python
-with open("account.seed", encoding="ascii") as f:
-    seed = bytearray.fromhex(f.read().strip())
-signed, outcome = c.transfer(seed, 0, RECIPIENT, 1_500_000, "1000")
-seed[:] = bytes(32)
+seed = read_seed("account.seed")
+try:
+    signed, outcome = c.transfer(seed, 0, RECIPIENT, 1_500_000, "1000")
+finally:
+    seed[:] = bytes(32)
 ```
 
 ```js
-const seed = Uint8Array.from(Buffer.from(fs.readFileSync('account.seed', 'utf8').trim(), 'hex'));
-const { signed, outcome } = await c.transfer(seed, 0, RECIPIENT, 1_500_000n, '1000');
-seed.fill(0);
+async function send(c) {
+  const seed = readSeed('account.seed');
+  try {
+    return await c.transfer(seed, 0, RECIPIENT, 1_500_000n, '1000');
+  } finally {
+    seed.fill(0);
+  }
+}
 ```
 
-The seed file holds the 64 hex character seed of a funded account and must be readable only by you. Amounts are whole numbers of Quon, one QTOV is one million Quon, and the last argument is the largest fee you allow, so the client refuses to sign if the gateway reports a higher fee. See
+The seed file holds the 64 hex character seed of a funded account and must be readable only by you. `read_seed` and `readSeed` are the readers in [../snippets/README.md](../snippets/README.md), which refuse a file anyone else can read, decode the hex into a fresh array and wipe the raw bytes. Amounts are whole numbers of Quon, one QTOV is one million Quon, and the last argument is the largest fee you allow, so the client refuses to sign if the gateway reports a higher fee. Pass no nonce for a normal send. An accepted outcome is not yet proven final, so the examples prove it with `confirmTransaction` against a genesis hash and validator roster you pin. See
 [../examples/python/transfer.py](../examples/python/transfer.py) and
 [../examples/javascript/transfer.js](../examples/javascript/transfer.js).
 
@@ -67,12 +87,14 @@ compile time. You read container state with `get_container` and `get_storage`, a
 you invoke a container by submitting a signed transaction.
 
 ```js
-const container = await c.container(CONTRACT);
-const storage = await c.storage(CONTRACT);
-const { signed, outcome } = await c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '50000');
+async function callContract(c, seed) {
+  const container = await c.container(CONTRACT);
+  const storage = await c.storage(CONTRACT);
+  return c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '50000');
+}
 ```
 
-ARGS_HEX are the call arguments produced from the interface that the Quanta compiler emits for the contract. QCore.py offers the same call method, and container and storage reads are in QCore.js.
+ARGS_HEX are the call arguments produced from the interface that the Quanta compiler emits for the contract. QCore.py offers the same call and storage methods, and the container read is in QCore.js.
 
 QAsset is the fungible token standard and QCollectible is the non fungible
 standard. Full runnable code is in

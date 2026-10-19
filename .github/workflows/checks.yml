@@ -20,6 +20,13 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: no key or seed files tracked
+        run: node .github/checks/tracked-files.mjs
+      - name: seed scanner finds every planted shape
+        run: node .github/checks/tracked-files.mjs --self-test
       - name: install gitleaks
         run: |
           set -euo pipefail
@@ -35,15 +42,74 @@ jobs:
           title = "quantova secret scan"
           [extend]
           useDefault = true
+          [[rules]]
+          id = "quantova-hex-seed"
+          description = "32 bytes written as 64 hex characters, the shape of a seed"
+          regex = '''(?:^|[^0-9A-Fa-f])(sha256[:=])?(?:0[xX])?([0-9A-Fa-f]{64})(?:[^0-9A-Fa-f]|$)'''
+          secretGroup = 2
+          [[rules.allowlists]]
+          description = "a digest labelled as sha256"
+          regexTarget = "match"
+          regexes = ['''sha256[:=][0-9A-Fa-f]{64}''']
+          [[rules.allowlists]]
+          description = "a checksum line handed to sha256sum"
+          regexTarget = "line"
+          regexes = ['''^\s*echo "[0-9a-f]{64}  \$RUNNER_TEMP/[A-Za-z0-9._-]+" \| sha256sum -c -\s*$''']
+          [[rules.allowlists]]
+          description = "a validator sortition root in a finality pin"
+          condition = "AND"
+          paths = ['''^finality-pin\.json$''', '''^examples/finality-pin\.json$''']
+          regexTarget = "line"
+          regexes = ['''^\s*"root":\s*"[0-9a-f]{64}",?\s*$''']
+          [[rules]]
+          id = "quantova-hex-halves"
+          description = "64 hex characters split over neighbouring lines"
+          regex = '''(\b[0-9A-Fa-f]{24,39}\b[^\n]{0,40}\n[^\n]{0,40}?\b[0-9A-Fa-f]{24,39}\b|(?:\b[0-9A-Fa-f]{16}\b[^\n0-9A-Fa-f]{0,24}\n[^\n0-9A-Fa-f]{0,24}){3}\b[0-9A-Fa-f]{16}\b)'''
+          secretGroup = 1
+          [[rules]]
+          id = "quantova-hex-bytes"
+          description = "32 bytes written as separated hex pairs, as od, colons, commas, 0x or C escapes print them"
+          regex = '''((?:\b(?:0[xX])?[0-9A-Fa-f]{2}(?:[ \t:,;-]{1,3}|[ \t,]*\n[ \t]*(?:[0-7]{7,8}[ \t]+)?)){31}\b(?:0[xX])?[0-9A-Fa-f]{2}\b|(?:\\x[0-9A-Fa-f]{2}){32})'''
+          secretGroup = 1
+          [[rules]]
+          id = "quantova-decimal-bytes"
+          description = "a list of exactly 32 byte values"
+          regex = '''\[\s*((?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\s*,\s*){31}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9]))\s*\]'''
+          secretGroup = 1
+          [[rules]]
+          id = "quantova-base64-seed"
+          description = "32 bytes written in base64 or base64url, padded or not, the shape of a seed"
+          regex = '''(?:^|[^A-Za-z0-9+/_-])((?:[A-Za-z0-9+/]{42}|[A-Za-z0-9_-]{42})[AEIMQUYcgkosw048]=?)(?:[^A-Za-z0-9+/=_-]|$)'''
+          secretGroup = 1
+          [[rules.allowlists]]
+          description = "a single case word, not the mixed case of a seed"
+          regexes = ['''^[A-Z0-9_+/-]+=?$''', '''^[a-z0-9_+/-]+=?$''']
+          [[rules]]
+          id = "quantova-mnemonic"
+          description = "twelve or more short words in a row on a line, the shape of a recovery phrase"
+          regex = '''(?im)(?:^|[\s"'`=:(\[,])((?:[a-z]{3,8}[ \t]+){11,24}[a-z]{3,8})[ \t"'`,;)\]]*$'''
+          secretGroup = 1
+          [[rules]]
+          id = "quantova-mnemonic-block"
+          description = "three or more lines of only short words, the shape of a recovery phrase written a few words per line"
+          regex = '''(?im)((?:^[ \t]*(?:[a-z]{3,8}[ \t]+){2,7}[a-z]{3,8}[ \t]*\n){3,})'''
+          secretGroup = 1
+          [[rules]]
+          id = "quantova-mnemonic-lines"
+          description = "twelve or more lines of one short word each, the shape of a recovery phrase"
+          regex = '''(?im)((?:^[ \t]*(?:[0-9]{1,2}[.)][ \t]*)?["']?[a-z]{3,8}["']?,?[ \t]*\n){12})'''
+          secretGroup = 1
           [allowlist]
-          description = "public, example, and checksum data that is not a secret"
+          description = "labelled test vectors, the exact shape of this file is checked by .github/checks/tracked-files.mjs"
           paths = [
-            '''(^|/)Cargo\.lock$''',
-            '''(^|/)package-lock\.json$''',
+            '''^labs/vectors/offline-vectors\.json$''',
           ]
           regexes = [
             '''YOUR_[A-Z0-9_]+''',
             '''^[Qq]1[0-9A-Za-z]{25,}$''',
+            '''^a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a$''',
+            '''^3a985da74fe225b2045c172d6bd390bd855f086e3e9d525b46bfe24511431532$''',
+            '''^ca91e093bb8de33e90db52d7c89876597d14760703793ea7211929e73e613062$''',
           ]
           TOML
           gitleaks detect --source . --no-banner --redact --config "$RUNNER_TEMP/gitleaks.toml"
@@ -65,5 +131,170 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
       - name: syntax
         run: |
-          for f in examples/javascript/*.js; do node --check "$f"; done
+          for f in examples/javascript/*.js .github/checks/*.mjs; do node --check "$f"; done
           python3 -m py_compile examples/python/*.py
+          node .github/checks/tracked-files.mjs --self-test
+      - name: offline behaviour
+        working-directory: examples/javascript
+        env:
+          QUANTOVA_GATEWAY: http://127.0.0.1:9
+          RUNNER: node
+          EXT: js
+        run: |
+          set -uo pipefail
+          t="$RUNNER_TEMP/offline"
+          mkdir -p "$t"
+          refuses() {
+            want="$1"
+            script="$2"
+            shift 2
+            if out=$(env "$@" $RUNNER "$script" 2>&1); then
+              echo "$script succeeded with $*"
+              exit 1
+            fi
+            if printf '%s' "$out" | LC_ALL=C grep -q $'[\x01-\x09\x0b-\x1f\x7f]'; then
+              echo "$script printed a control character"
+              exit 1
+            fi
+            printf '%s\n' "$out" | grep -qF -- "$want" || { echo "expected '$want' from $script but got $out"; exit 1; }
+          }
+          to=Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0
+          printf '%064d\n' 0 > "$t/loose.seed"
+          chmod 644 "$t/loose.seed"
+          printf '%064d\n' 0 > "$t/owner.seed"
+          chmod 600 "$t/owner.seed"
+          printf 'zz%062d\n' 0 > "$t/bad.seed"
+          chmod 600 "$t/bad.seed"
+          ln -sf "$t/owner.seed" "$t/link.seed"
+          refuses "chmod 600" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/loose.seed" QUANTOVA_TO="$to"
+          refuses "chmod 600" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/link.seed" QUANTOVA_TO="$to"
+          refuses "64 lowercase hex characters" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/bad.seed" QUANTOVA_TO="$to"
+          refuses "is not a Q1 address" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO=$'Q1\e[2K\e]0;x\a'
+          refuses "at most six decimal places" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to" QUANTOVA_AMOUNT=1.1234567
+          refuses "QUANTOVA_MAX_FEE is a whole number" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to" QUANTOVA_MAX_FEE=1000.5
+          refuses "QUANTOVA_NONCE is a whole number" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to" QUANTOVA_NONCE=-1
+          refuses "QUANTOVA_CALL_ARGS is lowercase hex" "contract_call.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_CONTRACT="$to" QUANTOVA_CALL_ARGS=XYZ
+          refuses "is not a Q1 address" "contract_call.$EXT" QUANTOVA_CONTRACT=$'\e[8mQ1'
+          refuses "error" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to"
+          refuses "refusing plaintext http" "connect.$EXT" QUANTOVA_GATEWAY=http://192.0.2.1:8645
+          env -u CHECK_QCORE node ../../.github/checks/run.mjs js || exit 1
+          proof="${CHECK_QCORE:-}"
+          if [ -z "$proof" ] && ! node -e 'process.exit(require("./node_modules/@quantovainc/qcore/package.json").version.split(".").map(Number).reduce((a, n) => a * 1000 + n, 0) >= 9000 ? 0 : 1)'; then
+            proof="$RUNNER_TEMP/qcore-js"
+            git clone --quiet https://github.com/Quantova/QCore.js "$proof" || exit 1
+            git -C "$proof" checkout --quiet 6b3ce72a806f76dc2825d951eb83cc4426705c38 || exit 1
+            test "$(git -C "$proof" rev-parse HEAD)" = 6b3ce72a806f76dc2825d951eb83cc4426705c38 || exit 1
+          fi
+          if [ -n "$proof" ]; then
+            CHECK_QCORE="$proof" node ../../.github/checks/run.mjs js || exit 1
+          fi
+  python:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: build QCore.py at the pinned release commits
+        run: |
+          set -euo pipefail
+          QDIR="$RUNNER_TEMP/quantova-src"
+          mkdir -p "$QDIR"
+          cd "$QDIR"
+          git clone https://github.com/Quantova/QCore.rs QCore.rs
+          git clone https://github.com/Quantova/QCore.py QCore.py
+          git -C QCore.rs checkout --quiet 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff
+          git -C QCore.py checkout --quiet 84d458ba1d69b3a654cfbbe67dea3b500c210e52
+          test "$(git -C QCore.rs rev-parse HEAD)" = 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff
+          test "$(git -C QCore.py rev-parse HEAD)" = 84d458ba1d69b3a654cfbbe67dea3b500c210e52
+          python3 -c 'import sys; sys.exit(sys.version_info < (3, 11))'
+          rustup toolchain install 1.98.0 --profile minimal
+          python3 -m venv qcore-venv
+          . qcore-venv/bin/activate
+          cat > maturin-requirements.txt <<'EOF'
+          maturin==1.15.0 \
+              --hash=sha256:0ebf9767892725083138e671c34482c660317a2f3d6a29fc0e0f34e9d8c99136 \
+              --hash=sha256:126e12e618b4db42f68c779a56d41f82a390145ba36ac3f621d057eb34f5ad9d \
+              --hash=sha256:4f9d33e6c3f9615c8caceecbbbd440f8eb25a3ddeb687077682cd5eca2e9ae15 \
+              --hash=sha256:552c2be4afd43fe8d5c9f3ec8d4c4756d973b8dcbe94c14084390301f50243e1 \
+              --hash=sha256:653020a63525bb224e5ab0adf02e17a2e08bc86dbea7fc1399c9a56d7529b99e \
+              --hash=sha256:6bf6dc62e22d4dcfd5a51244ff0d58975fa4979c48209fe84159617648956d82 \
+              --hash=sha256:7ab7eebffd7b8debca2265985de4eaeb332141276d24b9560b5ad484d4b3add1 \
+              --hash=sha256:7eb066372f541f8eb4909c79c5d9bd0b9e8125980bdf1ec9e8aba23c6c8d6c55 \
+              --hash=sha256:bf29beddd0c6708f112db51d5275fc28b28b9e9c9c5faae387eaef662918b176 \
+              --hash=sha256:c40b4eae7bf5ef1f4b1af8d623fe4105016f93578fb15b764e741d08ec3b92dd \
+              --hash=sha256:c7dc0c66c78d3debdd9c5aa807e861fbcbf07f3505d34b125df74c03986b0f48 \
+              --hash=sha256:cd35772633f489841132bc8e71d6fc7f842df30b9c05cd5cdf1ee1ddcb744cc7 \
+              --hash=sha256:da649988be98e87e009e51b1bf0d301b6a301bc0cecbdd60d40d8ba60748d1ca
+          EOF
+          pip install --only-binary :all: --require-hashes -r maturin-requirements.txt
+          (cd QCore.py && rustup run 1.98.0 maturin develop --release --locked)
+          python -c "import quantova_qcore"
+          echo "$QDIR/qcore-venv/bin" >> "$GITHUB_PATH"
+          deactivate
+          if [ "$(git -C QCore.py rev-parse HEAD)" != bca87c94cd2e52166f875c0967a03d66b41ac4ff ]; then
+            PROOF="$RUNNER_TEMP/quantova-proof"
+            mkdir -p "$PROOF"
+            git clone https://github.com/Quantova/QCore.rs "$PROOF/QCore.rs"
+            git clone https://github.com/Quantova/QCore.py "$PROOF/QCore.py"
+            git -C "$PROOF/QCore.rs" checkout --quiet d2112c88b6b31d84f0d27d122b9b38dfd561eabb
+            git -C "$PROOF/QCore.py" checkout --quiet bca87c94cd2e52166f875c0967a03d66b41ac4ff
+            test "$(git -C "$PROOF/QCore.rs" rev-parse HEAD)" = d2112c88b6b31d84f0d27d122b9b38dfd561eabb
+            test "$(git -C "$PROOF/QCore.py" rev-parse HEAD)" = bca87c94cd2e52166f875c0967a03d66b41ac4ff
+            python3 -m venv "$PROOF/qcore-venv"
+            "$PROOF/qcore-venv/bin/pip" install --only-binary :all: --require-hashes -r maturin-requirements.txt
+            (cd "$PROOF/QCore.py" && PATH="$PROOF/qcore-venv/bin:$PATH" VIRTUAL_ENV="$PROOF/qcore-venv" rustup run 1.98.0 maturin develop --release --locked)
+            "$PROOF/qcore-venv/bin/python" -c "import quantova_qcore"
+            echo "CHECK_PYTHON=$PROOF/qcore-venv/bin/python" >> "$GITHUB_ENV"
+          fi
+      - name: offline behaviour
+        working-directory: examples/python
+        env:
+          QUANTOVA_GATEWAY: http://127.0.0.1:9
+          PYTHONDONTWRITEBYTECODE: "1"
+          RUNNER: python
+          EXT: py
+        run: |
+          set -uo pipefail
+          t="$RUNNER_TEMP/offline"
+          mkdir -p "$t"
+          refuses() {
+            want="$1"
+            script="$2"
+            shift 2
+            if out=$(env "$@" $RUNNER "$script" 2>&1); then
+              echo "$script succeeded with $*"
+              exit 1
+            fi
+            if printf '%s' "$out" | LC_ALL=C grep -q $'[\x01-\x09\x0b-\x1f\x7f]'; then
+              echo "$script printed a control character"
+              exit 1
+            fi
+            printf '%s\n' "$out" | grep -qF -- "$want" || { echo "expected '$want' from $script but got $out"; exit 1; }
+          }
+          to=Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0
+          printf '%064d\n' 0 > "$t/loose.seed"
+          chmod 644 "$t/loose.seed"
+          printf '%064d\n' 0 > "$t/owner.seed"
+          chmod 600 "$t/owner.seed"
+          printf 'zz%062d\n' 0 > "$t/bad.seed"
+          chmod 600 "$t/bad.seed"
+          ln -sf "$t/owner.seed" "$t/link.seed"
+          refuses "chmod 600" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/loose.seed" QUANTOVA_TO="$to"
+          refuses "chmod 600" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/link.seed" QUANTOVA_TO="$to"
+          refuses "64 lowercase hex characters" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/bad.seed" QUANTOVA_TO="$to"
+          refuses "is not a Q1 address" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO=$'Q1\e[2K\e]0;x\a'
+          refuses "at most six decimal places" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to" QUANTOVA_AMOUNT=1.1234567
+          refuses "QUANTOVA_MAX_FEE is a whole number" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to" QUANTOVA_MAX_FEE=1000.5
+          refuses "QUANTOVA_NONCE is a whole number" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to" QUANTOVA_NONCE=-1
+          refuses "QUANTOVA_CALL_ARGS is lowercase hex" "contract_call.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_CONTRACT="$to" QUANTOVA_CALL_ARGS=XYZ
+          refuses "is not a Q1 address" "contract_call.$EXT" QUANTOVA_CONTRACT=$'\e[8mQ1'
+          refuses "error" "transfer.$EXT" QUANTOVA_SEED_FILE="$t/owner.seed" QUANTOVA_TO="$to"
+          refuses "refusing plaintext http" "connect.$EXT" QUANTOVA_GATEWAY=http://192.0.2.1:8645
+          node ../../.github/checks/run.mjs py || exit 1
+          if [ -n "${CHECK_PYTHON:-}" ]; then
+            PYTHON="$CHECK_PYTHON" node ../../.github/checks/run.mjs py || exit 1
+          fi

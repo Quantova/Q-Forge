@@ -15,8 +15,8 @@ chain's entire history retroactively forgeable.
 
 Quantova is post quantum across the whole stack. The cryptography is Q-Crypto,
 Quantova's implementation of the NIST post quantum standards, written against the
-published FIPS documents, with no classical public key cryptography anywhere in the
-chain.
+published FIPS documents. Transactions, account keys and validator authority use
+ML-DSA-65, and a client reaches the gateway over standard TLS.
 
 * **Signatures**, ML-DSA-65 (FIPS 204) for account and validator authority.
 * **Key exchange**, ML-KEM-768 (FIPS 203).

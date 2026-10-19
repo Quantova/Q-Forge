@@ -18,15 +18,17 @@ later. For an organization holding assets, issuing transactions, or relying on o
 chain records, that is a long lived exposure.
 
 Quantova removes it at the root. Accounts, validator authority, and every
-transaction are secured with the Q-Crypto post quantum stack, with no elliptic
-curve and no classical public key cryptography anywhere in the chain. Adopting the
-Quantova tools means your integration is post quantum by default, not as an add on.
+transaction are secured with the Q-Crypto post quantum stack. Transactions and
+account keys use ML-DSA-65, and a client reaches the gateway over standard TLS.
+Adopting the Quantova tools means your transaction signing is post quantum by
+default, not as an add on.
 See [post-quantum-overview.md](post-quantum-overview.md).
 
 ## Adoption path
 
-1. **Evaluate on testnet.** Build against `https://rpc-testnet.quantova.org` with
-   QCore.js and QCore.py and free TQTOV from the faucet. No spend, full stack.
+1. **Evaluate on the live network.** Build against `https://rpc-testnet.quantova.org`,
+   the gateway of Q-test-net-01, with QCore.js and QCore.py and free TQTOV from the
+   faucet. TQTOV is a test asset, so evaluation spends nothing of value.
 2. **Integrate the clients.** Use QCore.js for web and Node services and QCore.py
    for backends, data, and automation to read state and submit ML-DSA-65 signed
    transactions.
@@ -35,8 +37,7 @@ See [post-quantum-overview.md](post-quantum-overview.md).
    Q-Crypto backend through the client.
 4. **Name your accounts and contracts** with QNS under the capital Q top level
    domain for human readable identifiers.
-5. **Verify continuously**, see below, and track the road to mainnet, which is not
-   yet live.
+5. **Verify continuously**, see below, and track the mainnet launch.
 
 ## Operating against a post quantum stack
 

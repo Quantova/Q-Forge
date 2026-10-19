@@ -3,7 +3,8 @@
 The set of tools Quantova publishes for building on and verifying the network.
 Everything here is post quantum by construction. Accounts, signatures, and
 authorization use the Q-Crypto stack, ML-DSA-65 signatures and SHA-3 with SHAKE
-hashing. Quantova is on testnet, ahead of a mainnet launch.
+hashing. The Quantova network Q-test-net-01 is live, and its native asset TQTOV is a
+test asset ahead of the mainnet launch.
 
 ## Build on Quantova
 
@@ -21,13 +22,14 @@ hashing. Quantova is on testnet, ahead of a mainnet launch.
 
 | Tool | What it is | Use it to |
 |---|---|---|
-| **chain-params** | Gateway endpoints, genesis, and network parameters | Connect a node or client to the testnet, read the network parameters |
-| **faucet** | Free testnet asset, TQTOV | Get TQTOV to build and test without spending anything of value |
+| **chain-params** | Gateway endpoints, genesis, and network parameters | Connect a node or client to the live network Q-test-net-01, read the network parameters |
+| **faucet** | Free TQTOV, the native test asset of the live network | Get TQTOV to build and test without spending anything of value |
 | **QNS** | The Quantova Name Service, names under the capital Q top level domain | Register names such as `alice.Q` that resolve to Quantova accounts |
 
 Assets on Quantova follow two standards. QAsset is the fungible token standard and
 QCollectible is the non fungible standard. The base asset is QTOV, its base unit is
-the Quon, and one QTOV is one million Quon. The testnet asset is TQTOV.
+the Quon, and one QTOV is one million Quon. On the live network Q-test-net-01 the
+native asset is TQTOV, a test asset.
 
 ## Verify
 
