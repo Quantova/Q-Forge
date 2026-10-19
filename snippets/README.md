@@ -1,7 +1,7 @@
 # Snippets
 
 Short copy paste code for common Quantova tasks, in QCore.js and QCore.py. For full
-runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.8.0`. Build QCore.py from its 0.8.0 release commit 84d458ba1d69b3a654cfbbe67dea3b500c210e52, next to QCore.rs at commit 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff, with the pinned commands in [../examples/python/README.md](../examples/python/README.md). QCore.py imports as `quantova_qcore`.
+runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.9.1`. Build QCore.py from its 0.9.0 release commit bca87c94cd2e52166f875c0967a03d66b41ac4ff, next to QCore.rs at commit d2112c88b6b31d84f0d27d122b9b38dfd561eabb, with the pinned commands in [../examples/python/README.md](../examples/python/README.md). QCore.py imports as `quantova_qcore`.
 
 ## Connect and read an account
 

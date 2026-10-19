@@ -7,7 +7,7 @@ npm ci
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   # or http://127.0.0.1:8645
 ```
 
-`npm ci` installs the pinned `@quantovainc/qcore` 0.8.0 from the lockfile.
+`npm ci` installs the pinned `@quantovainc/qcore` 0.9.1 from the lockfile.
 
 | File | What it shows |
 |---|---|
@@ -77,7 +77,7 @@ hash of that network pinned in `../finality-pin.json`, because the chain only ac
 transactions signed over its genesis, so without both the examples refuse to sign.
 Reading the chain works with any release. QCore 0.9.0 and later sign over the pinned
 genesis and refuse a gateway that names another one, and a genesis built into the client
-that differs from the pin stops the examples. QCore 0.8.0, which the examples pin today,
-cannot sign over a genesis, so it signs only for a local chain that `QUANTOVA_CHAIN` names,
-and it stops at once when a genesis hash is pinned. A pin file must be a regular file
+that differs from the pin stops the examples. QCore 0.8.0 and earlier
+cannot sign over a genesis, so with them the examples sign only for a local chain that
+`QUANTOVA_CHAIN` names and stop at once when a genesis hash is pinned. A pin file must be a regular file
 owned by the user who runs the examples that nobody else can write.

@@ -26,7 +26,7 @@ the mainnet launch.
 
 Connect to the Quantova gateway and read the chain, no keys required.
 
-Install QCore.js with `npm install @quantovainc/qcore@0.8.0`. Build QCore.py from its 0.8.0 release commit 84d458ba1d69b3a654cfbbe67dea3b500c210e52, next to QCore.rs at commit 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff, with the pinned commands under Running the examples below. QCore.py imports as `quantova_qcore`.
+Install QCore.js with `npm install @quantovainc/qcore@0.9.1`. Build QCore.py from its 0.9.0 release commit bca87c94cd2e52166f875c0967a03d66b41ac4ff, next to QCore.rs at commit d2112c88b6b31d84f0d27d122b9b38dfd561eabb, with the pinned commands under Running the examples below. QCore.py imports as `quantova_qcore`.
 
 ```python
 import sys
@@ -139,7 +139,7 @@ register names with QNS.
 
 ## Running the examples
 
-Build QCore.py once, outside this repository, from the exact 0.8.0 release commits, inside a virtual environment with maturin 1.15.0 pinned to the sha256 of every wheel PyPI publishes for it and installed from wheels only, so pip refuses any other bytes and never runs a source build, with the Rust compiler pinned to rustc 1.98.0 through rustup, and with the locked dependency set. You need Python 3.11 or later, because maturin needs no further packages there, and rustup.
+Build QCore.py once, outside this repository, from the exact 0.9.0 release commits, inside a virtual environment with maturin 1.15.0 pinned to the sha256 of every wheel PyPI publishes for it and installed from wheels only, so pip refuses any other bytes and never runs a source build, with the Rust compiler pinned to rustc 1.98.0 through rustup, and with the locked dependency set. You need Python 3.11 or later, because maturin needs no further packages there, and rustup.
 
 ```bash
 QDIR="$HOME/quantova-src"
@@ -163,10 +163,10 @@ EOF
 cd "$QDIR" &&
 git clone https://github.com/Quantova/QCore.rs QCore.rs &&
 git clone https://github.com/Quantova/QCore.py QCore.py &&
-git -C QCore.rs checkout --quiet 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff &&
-git -C QCore.py checkout --quiet 84d458ba1d69b3a654cfbbe67dea3b500c210e52 &&
-test "$(git -C QCore.rs rev-parse HEAD)" = 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff &&
-test "$(git -C QCore.py rev-parse HEAD)" = 84d458ba1d69b3a654cfbbe67dea3b500c210e52 &&
+git -C QCore.rs checkout --quiet d2112c88b6b31d84f0d27d122b9b38dfd561eabb &&
+git -C QCore.py checkout --quiet bca87c94cd2e52166f875c0967a03d66b41ac4ff &&
+test "$(git -C QCore.rs rev-parse HEAD)" = d2112c88b6b31d84f0d27d122b9b38dfd561eabb &&
+test "$(git -C QCore.py rev-parse HEAD)" = bca87c94cd2e52166f875c0967a03d66b41ac4ff &&
 python3 -c 'import sys; sys.exit(sys.version_info < (3, 11))' &&
 python3 -m venv qcore-venv &&
 . qcore-venv/bin/activate &&

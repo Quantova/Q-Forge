@@ -182,8 +182,8 @@ jobs:
           if [ -z "$proof" ] && ! node -e 'process.exit(require("./node_modules/@quantovainc/qcore/package.json").version.split(".").map(Number).reduce((a, n) => a * 1000 + n, 0) >= 9000 ? 0 : 1)'; then
             proof="$RUNNER_TEMP/qcore-js"
             git clone --quiet https://github.com/Quantova/QCore.js "$proof" || exit 1
-            git -C "$proof" checkout --quiet 6b3ce72a806f76dc2825d951eb83cc4426705c38 || exit 1
-            test "$(git -C "$proof" rev-parse HEAD)" = 6b3ce72a806f76dc2825d951eb83cc4426705c38 || exit 1
+            git -C "$proof" checkout --quiet d5c592d659c51e55e2fa3e5bcd84d212db2dd707 || exit 1
+            test "$(git -C "$proof" rev-parse HEAD)" = d5c592d659c51e55e2fa3e5bcd84d212db2dd707 || exit 1
           fi
           if [ -n "$proof" ]; then
             CHECK_QCORE="$proof" node ../../.github/checks/run.mjs js || exit 1
@@ -206,10 +206,10 @@ jobs:
           cd "$QDIR"
           git clone https://github.com/Quantova/QCore.rs QCore.rs
           git clone https://github.com/Quantova/QCore.py QCore.py
-          git -C QCore.rs checkout --quiet 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff
-          git -C QCore.py checkout --quiet 84d458ba1d69b3a654cfbbe67dea3b500c210e52
-          test "$(git -C QCore.rs rev-parse HEAD)" = 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff
-          test "$(git -C QCore.py rev-parse HEAD)" = 84d458ba1d69b3a654cfbbe67dea3b500c210e52
+          git -C QCore.rs checkout --quiet d2112c88b6b31d84f0d27d122b9b38dfd561eabb
+          git -C QCore.py checkout --quiet bca87c94cd2e52166f875c0967a03d66b41ac4ff
+          test "$(git -C QCore.rs rev-parse HEAD)" = d2112c88b6b31d84f0d27d122b9b38dfd561eabb
+          test "$(git -C QCore.py rev-parse HEAD)" = bca87c94cd2e52166f875c0967a03d66b41ac4ff
           python3 -c 'import sys; sys.exit(sys.version_info < (3, 11))'
           rustup toolchain install 1.98.0 --profile minimal
           python3 -m venv qcore-venv

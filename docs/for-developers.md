@@ -9,7 +9,7 @@ gateway over ordinary HTTPS.
 ## Set up
 
 ```bash
-npm install @quantovainc/qcore@0.8.0
+npm install @quantovainc/qcore@0.9.1
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
 ```
 

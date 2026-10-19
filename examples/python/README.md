@@ -26,10 +26,10 @@ EOF
 cd "$QDIR" &&
 git clone https://github.com/Quantova/QCore.rs QCore.rs &&
 git clone https://github.com/Quantova/QCore.py QCore.py &&
-git -C QCore.rs checkout --quiet 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff &&
-git -C QCore.py checkout --quiet 84d458ba1d69b3a654cfbbe67dea3b500c210e52 &&
-test "$(git -C QCore.rs rev-parse HEAD)" = 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff &&
-test "$(git -C QCore.py rev-parse HEAD)" = 84d458ba1d69b3a654cfbbe67dea3b500c210e52 &&
+git -C QCore.rs checkout --quiet d2112c88b6b31d84f0d27d122b9b38dfd561eabb &&
+git -C QCore.py checkout --quiet bca87c94cd2e52166f875c0967a03d66b41ac4ff &&
+test "$(git -C QCore.rs rev-parse HEAD)" = d2112c88b6b31d84f0d27d122b9b38dfd561eabb &&
+test "$(git -C QCore.py rev-parse HEAD)" = bca87c94cd2e52166f875c0967a03d66b41ac4ff &&
 python3 -c 'import sys; sys.exit(sys.version_info < (3, 11))' &&
 python3 -m venv qcore-venv &&
 . qcore-venv/bin/activate &&
@@ -38,7 +38,7 @@ pip install --only-binary :all: --require-hashes -r maturin-requirements.txt &&
 (cd QCore.py && rustup run 1.98.0 maturin develop --release --locked)
 ```
 
-Each step runs only when the one before it succeeded, so a checkout that does not match the two release commits stops the build before any code from it runs. The block stops at its first check on a Python older than 3.11, and `_common.py` refuses to run on one. The commits are QCore.rs 71ad1a1e76fbbec26dd5ebcda8d7713655ec08ff and QCore.py 84d458ba1d69b3a654cfbbe67dea3b500c210e52, the 0.8.0 release. `--locked` builds with the Cargo.lock in QCore.py and fails if it would change. Keep `qcore-venv` active when you run the examples.
+Each step runs only when the one before it succeeded, so a checkout that does not match the two release commits stops the build before any code from it runs. The block stops at its first check on a Python older than 3.11, and `_common.py` refuses to run on one. The commits are QCore.rs d2112c88b6b31d84f0d27d122b9b38dfd561eabb and QCore.py bca87c94cd2e52166f875c0967a03d66b41ac4ff, the 0.9.0 release. `--locked` builds with the Cargo.lock in QCore.py and fails if it would change. Keep `qcore-venv` active when you run the examples.
 
 ```bash
 export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   # or http://127.0.0.1:8645
@@ -112,7 +112,7 @@ hash of that network pinned in `../finality-pin.json`, because the chain only ac
 transactions signed over its genesis, so without both the examples refuse to sign.
 Reading the chain works with any release. QCore 0.9.0 and later sign over the pinned
 genesis and refuse a gateway that names another one, and a genesis built into the client
-that differs from the pin stops the examples. QCore 0.8.0, which the examples pin today,
-cannot sign over a genesis, so it signs only for a local chain that `QUANTOVA_CHAIN` names,
-and it stops at once when a genesis hash is pinned. A pin file must be a regular file
+that differs from the pin stops the examples. QCore 0.8.0 and earlier
+cannot sign over a genesis, so with them the examples sign only for a local chain that
+`QUANTOVA_CHAIN` names and stop at once when a genesis hash is pinned. A pin file must be a regular file
 owned by the user who runs the examples that nobody else can write.
