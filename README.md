@@ -37,7 +37,7 @@ from quantova_qcore import Client, Network
 printable = lambda v: "".join(ch for ch in str(v) if unicodedata.category(ch) not in ("Cc", "Cf", "Zl", "Zp"))
 
 try:
-    c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
+    c = Client("https://q-test-net-01.quantova.org", network=Network.testnet())
     print("head   ", printable(c.head()["height"]))
     print("account", printable(c.account("Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0")["balance"]))
 except Exception as err:
@@ -50,7 +50,7 @@ const { Client, Network } = require('@quantovainc/qcore');
 const printable = (v) => String(v).replace(/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/gu, '');
 
 async function main() {
-  const c = new Client('https://rpc-testnet.quantova.org', { network: Network.testnet() });
+  const c = new Client('https://q-test-net-01.quantova.org', { network: Network.testnet() });
   console.log('head   ', printable((await c.head()).height));
   console.log('account', printable((await c.account('Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0')).balance));
 }
@@ -126,7 +126,7 @@ with a flat JSON body. There is no WebSocket transport.
 
 | Environment | Gateway base URL |
 |---|---|
-| Live network Q-test-net-01 | `https://rpc-testnet.quantova.org` |
+| Live network Q-test-net-01 | `https://q-test-net-01.quantova.org` |
 | Local dev | `http://127.0.0.1:8645` |
 
 The live network is named Q-test-net-01, and its native asset TQTOV is a test asset ahead of
@@ -179,7 +179,7 @@ Each step runs only when the one before it succeeded, so a checkout that does no
 
 ```bash
 cd examples/python
-export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
+export QUANTOVA_GATEWAY=https://q-test-net-01.quantova.org
 python connect.py
 
 cd ../javascript

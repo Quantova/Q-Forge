@@ -10,7 +10,7 @@ gateway over ordinary HTTPS.
 
 ```bash
 npm install @quantovainc/qcore@0.9.1
-export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org
+export QUANTOVA_GATEWAY=https://q-test-net-01.quantova.org
 ```
 
 Get a wallet with QMask and free TQTOV from the faucet as in
@@ -27,7 +27,7 @@ from quantova_qcore import Client, Network
 printable = lambda v: "".join(ch for ch in str(v) if unicodedata.category(ch) not in ("Cc", "Cf", "Zl", "Zp"))
 
 try:
-    c = Client("https://rpc-testnet.quantova.org", network=Network.testnet())
+    c = Client("https://q-test-net-01.quantova.org", network=Network.testnet())
     print("head   ", printable(c.head()["height"]))
     print("account", printable(c.account("Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0")["balance"]))
 except Exception as err:
@@ -40,7 +40,7 @@ const { Client, Network } = require('@quantovainc/qcore');
 const printable = (v) => String(v).replace(/[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/gu, '');
 
 async function main() {
-  const c = new Client('https://rpc-testnet.quantova.org', { network: Network.testnet() });
+  const c = new Client('https://q-test-net-01.quantova.org', { network: Network.testnet() });
   console.log('head   ', printable((await c.head()).height));
   console.log('account', printable((await c.account('Q1ZF0T2M759GVM5NMLTVQWQKPPX972HTEKG2C2TZ008QEW22N0XFLSESWNG0')).balance));
 }

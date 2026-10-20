@@ -4,7 +4,7 @@ Runnable samples using the official JavaScript client. Point them at any gateway
 
 ```bash
 npm ci
-export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   # or http://127.0.0.1:8645
+export QUANTOVA_GATEWAY=https://q-test-net-01.quantova.org   # or http://127.0.0.1:8645
 ```
 
 `npm ci` installs the pinned `@quantovainc/qcore` 0.9.1 from the lockfile.

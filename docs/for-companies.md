@@ -26,7 +26,7 @@ See [post-quantum-overview.md](post-quantum-overview.md).
 
 ## Adoption path
 
-1. **Evaluate on the live network.** Build against `https://rpc-testnet.quantova.org`,
+1. **Evaluate on the live network.** Build against `https://q-test-net-01.quantova.org`,
    the gateway of Q-test-net-01, with QCore.js and QCore.py and free TQTOV from the
    faucet. TQTOV is a test asset, so evaluation spends nothing of value.
 2. **Integrate the clients.** Use QCore.js for web and Node services and QCore.py

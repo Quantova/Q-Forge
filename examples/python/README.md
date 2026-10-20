@@ -41,7 +41,7 @@ pip install --only-binary :all: --require-hashes -r maturin-requirements.txt &&
 Each step runs only when the one before it succeeded, so a checkout that does not match the two release commits stops the build before any code from it runs. The block stops at its first check on a Python older than 3.11, and `_common.py` refuses to run on one. The commits are QCore.rs d2112c88b6b31d84f0d27d122b9b38dfd561eabb and QCore.py bca87c94cd2e52166f875c0967a03d66b41ac4ff, the 0.9.0 release. `--locked` builds with the Cargo.lock in QCore.py and fails if it would change. Keep `qcore-venv` active when you run the examples.
 
 ```bash
-export QUANTOVA_GATEWAY=https://rpc-testnet.quantova.org   # or http://127.0.0.1:8645
+export QUANTOVA_GATEWAY=https://q-test-net-01.quantova.org   # or http://127.0.0.1:8645
 ```
 
 | File | What it shows |
