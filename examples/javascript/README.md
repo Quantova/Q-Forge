@@ -7,7 +7,7 @@ npm ci
 export QUANTOVA_GATEWAY=https://q-test-net-01.quantova.org   # or http://127.0.0.1:8645
 ```
 
-`npm ci` installs the pinned `@quantovainc/qcore` 0.9.1 from the lockfile.
+`npm ci` installs the pinned `@quantovainc/qcore` 0.10.0 from the lockfile.
 
 | File | What it shows |
 |---|---|
@@ -72,10 +72,10 @@ and asks you to check by hand. Pass `--send-again` to send an identical transact
 purpose. `QUANTOVA_STATE_DIR` moves the `~/.quantova` directory.
 
 The repository ships the pin empty until the values for Q-test-net-01 are published.
-Signing for Q-test-net-01 or any mainnet chain needs QCore 0.9.0 or later and the genesis
+Signing for Q-test-net-01 or any mainnet chain needs QCore 0.10.0 or later and the genesis
 hash of that network pinned in `../finality-pin.json`, because the chain only accepts
 transactions signed over its genesis, so without both the examples refuse to sign.
-Reading the chain works with any release. QCore 0.9.0 and later sign over the pinned
+Reading the chain works with any release. QCore 0.10.0 and later sign over the pinned
 genesis and refuse a gateway that names another one, and a genesis built into the client
 that differs from the pin stops the examples. QCore 0.8.0 and earlier
 cannot sign over a genesis, so with them the examples sign only for a local chain that

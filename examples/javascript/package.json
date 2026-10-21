@@ -3,6 +3,6 @@
   "private": true,
   "license": "Apache-2.0 OR MIT",
   "dependencies": {
-    "@quantovainc/qcore": "0.9.1"
+    "@quantovainc/qcore": "0.10.0"
   }
 }

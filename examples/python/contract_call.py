@@ -21,7 +21,7 @@ def main():
             order = {
                 "index": index_of(),
                 "meter": int(whole_env("QUANTOVA_METER", "30000")),
-                "max_fee": whole_env("QUANTOVA_MAX_FEE", "50000"),
+                "max_fee": whole_env("QUANTOVA_MAX_FEE", "1000"),
                 "nonce": expected_nonce(),
             }
         _, head = node_info(c, order is not None)

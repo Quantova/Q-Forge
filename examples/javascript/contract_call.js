@@ -17,7 +17,7 @@ async function main() {
     const order = ready ? {
       index: indexOf(),
       meter: BigInt(wholeEnv('QUANTOVA_METER', '30000')),
-      maxFee: wholeEnv('QUANTOVA_MAX_FEE', '50000'),
+      maxFee: wholeEnv('QUANTOVA_MAX_FEE', '1000'),
       nonce: expectedNonce(),
     } : null;
     await nodeInfo(c, Boolean(order));

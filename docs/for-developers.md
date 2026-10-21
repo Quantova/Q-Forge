@@ -9,7 +9,7 @@ gateway over ordinary HTTPS.
 ## Set up
 
 ```bash
-npm install @quantovainc/qcore@0.9.1
+npm install @quantovainc/qcore@0.10.0
 export QUANTOVA_GATEWAY=https://q-test-net-01.quantova.org
 ```
 
@@ -90,7 +90,7 @@ you invoke a container by submitting a signed transaction.
 async function callContract(c, seed) {
   const container = await c.container(CONTRACT);
   const storage = await c.storage(CONTRACT);
-  return c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '50000');
+  return c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '1000');
 }
 ```
 
