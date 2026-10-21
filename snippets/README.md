@@ -1,7 +1,7 @@
 # Snippets
 
 Short copy paste code for common Quantova tasks, in QCore.js and QCore.py. For full
-runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.9.1`. Build QCore.py from its 0.9.0 release commit bca87c94cd2e52166f875c0967a03d66b41ac4ff, next to QCore.rs at commit d2112c88b6b31d84f0d27d122b9b38dfd561eabb, with the pinned commands in [../examples/python/README.md](../examples/python/README.md). QCore.py imports as `quantova_qcore`.
+runnable programs, see [../examples](../examples). Install QCore.js with `npm install @quantovainc/qcore@0.10.0`. Build QCore.py from its 0.10.0 release commit 1ddca965c203126cc04ed825b133df3ebb4e4dab, next to QCore.rs at commit a8453162c84be24921315ef3b5c50c14e320a079, with the pinned commands in [../examples/python/README.md](../examples/python/README.md). QCore.py imports as `quantova_qcore`.
 
 ## Connect and read an account
 
@@ -150,7 +150,7 @@ An accepted outcome means the gateway took the transaction. To prove it final, c
 async function callContract(c, seed) {
   const container = await c.container(CONTRACT);
   const storage = await c.storage(CONTRACT);
-  return c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '50000');
+  return c.call(seed, 0, CONTRACT, ARGS_HEX, 30000n, '1000');
 }
 ```
 
